@@ -145,3 +145,40 @@ Blockers:
 Stop condition:
 
 Do not start A020, style cleanup, journal regeneration, or TOC.
+
+## LLM-0.1 Contract Alignment And Governance Repair
+
+Task status: COMPLETED.
+
+Base SHA: `5f5adf3b26e73c88dd1ac0cd1ed9969b1f9b2eab`
+
+Implementation SHA: `f78afaa72a7cad0527a295e85a20e980cbc9ee98`
+
+Public changes:
+
+- Added authoritative `skills/journal_builder` with active paragraph classifier v1 prompt/schema and candidate v2 prompt/schema.
+- Replaced the previous `paragraphs` output contract with the current `fragment_status`, `state_update`, `blocks`, `problems`, and `next_action` contract.
+- Preserved v1 business type names: `empty_paragraph`, `affiliation`, `main_text`, `blocks`, and `service_data`.
+- Kept ORCID as `service_data` in v1; v2 candidate may introduce `orcid` only after a migration decision.
+- Loaded the system prompt from the versioned skill directory instead of embedding a short English prompt in code.
+- Strengthened validation with `jsonschema`, exact ID checks, context-only ID rejection, forbidden response keys, and `MODEL_STATE_DISAGREEMENT`.
+- Added missing governance docs for publication/data policy, orchestration, handoff, local LLM integration, context/chunking, multi-chat execution, and roadmap.
+- Hardened Docker compose: internal network, no default host port for `llm-runtime`, optional debug binding only to `127.0.0.1`.
+
+Verification:
+
+- Public pytest: PASS, 35 passed.
+- Docker worker build: PASS.
+- Worker image mock smoke: PASS.
+- Handoff validation: PASS.
+
+Closed blockers:
+
+- `CHANGESET_ARCHIVE_UNAVAILABLE`
+- `HANDOFF_PLACEHOLDER_SHA`
+- `MOCK_AB_TEMPLATE_MISLABEL`
+- `V1_CONTRACT_MISMATCH`
+
+Remaining follow-up:
+
+Real Gemma 4 E2B benchmark remains for LLM-0.2. Do not start it without explicit instruction.

@@ -14,7 +14,7 @@ Commands executed:
 - `python -m journal_factory.llm.host_runner synthetic-smoke --mock --output reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.mock.json`
 - `python -m journal_factory.llm.host_runner synthetic-smoke --mock --prompt-template manual_chatml --temperature 0.01 --seed 42 --output reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.manual_mock.json`
 - `python -m journal_factory.llm.host_runner synthetic-smoke --base-url http://localhost:11434 --model gemma2:2b --runtime ollama-openai-compatible --context 8192 --max-output 1536 --temperature 0.01 --seed 42 --threads 12 --gpu-layers 34 --concurrency 1 --prompt-template auto_jinja --output reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.ollama_gemma2_probe.json`
-- `python -m journal_factory.llm.host_runner validate-public-handoff reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.mock.json`
+- `python -m journal_factory.llm.host_runner validate-public-handoff reports/runs/2026-07-15_llm_0_governance_docker_smoke/HANDOFF.json`
 
 Results:
 
@@ -29,4 +29,5 @@ Results:
 - Docker worker build: PASS.
 - Docker LLM runtime health: BLOCKED for target Gemma 4 E2B runtime.
 - Synthetic classifier smoke: PASS in deterministic mock mode, FAIL-CLOSED for non-target local `gemma2:2b` probe.
+- Public handoff validation: PASS after LLM-0.1 repair.
 - Public data/security scan: LIMITED PASS; `git grep` found no actionable secrets or absolute paths in changed public files, but `gitleaks` is unavailable.

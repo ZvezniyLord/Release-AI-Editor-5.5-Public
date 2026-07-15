@@ -1,32 +1,35 @@
 # Current Cycle
 
-Date: 2026-07-15
+Date: 2026-07-16
 
-Cycle: LLM-0 - Governance + Docker Local LLM Smoke
+Cycle: LLM-0.1 - Contract Alignment And Governance Repair
 
 Scope:
 
-- Integrate Docker-first local LLM governance, skills, schemas, chunking, validators, host runner, and synthetic tests.
-- Keep LLM isolated from source DOCX paths and filesystem access.
-- Do not change journal generation, TOC, article matching, or formatting pipeline.
+- Preserve LLM-0 foundation.
+- Align the local LLM classifier contract with the current `fragment_status`, `state_update`, `blocks`, `problems`, and `next_action` output.
+- Add versioned `skills/journal_builder` prompt/schema files.
+- Add governance documentation missing from the unavailable changeset transfer.
+- Harden Docker compose so `llm-runtime` does not publish a host port by default.
+- Do not run real model benchmark.
+- Do not change journal assembly, A020, formatting, frontmatter, `toc_core`, or journal DOCX/PDF.
 
 Result:
 
-- Status: BLOCKED.
-- Prepared changeset ZIP was unavailable, so its SHA-256 could not be verified.
-- Public LLM governance and code were implemented from the LLM-0 prompt and marked fail-closed.
-- Docker worker build passed.
-- Synthetic mock smoke passed.
-- Real target Gemma 4 E2B host smoke is blocked because the required OpenAI-compatible runtime is not available.
-- Non-target local `gemma2:2b` probe failed closed on schema validation.
+- Status: COMPLETED.
+- Active prompt: `skills/journal_builder/prompts/paragraph_classifier/v1/system.txt`.
+- Active schema: `skills/journal_builder/schemas/paragraph_classifier_output.v1.schema.json`.
+- Candidate v2 exists but is not active.
+- `CHANGESET_ARCHIVE_UNAVAILABLE` is closed as a transfer limitation.
 
 Verification:
 
-- `python -m pytest -q`: PASS, 32 passed.
+- Public pytest: PASS, 35 passed.
 - Docker worker build: PASS.
-- Worker image synthetic smoke: PASS in mock mode.
-- Source volume isolation: PASS.
+- Worker image mock smoke: PASS.
+- Handoff validation: PASS.
+- Compose source isolation and network exposure tests: PASS.
 
 Stop condition:
 
-Stop after commit and push. Do not start A020, style cleanup, journal regeneration, or TOC.
+Stop after commit and push. Do not start real model benchmark, LLM-1, A020, style cleanup, journal regeneration, or TOC.

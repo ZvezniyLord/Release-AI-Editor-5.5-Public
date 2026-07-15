@@ -1,19 +1,19 @@
 {
+  "artifact_data_classes": [
+    "public_code",
+    "public_docs",
+    "sanitized_reports",
+    "docker_config"
+  ],
   "base_sha": "14f64691f925099f84afd9f0b552c68f6353cedd",
   "blockers": [
-    "CHANGESET_ARCHIVE_UNAVAILABLE",
     "TARGET_GEMMA4_E2B_RUNTIME_NOT_AVAILABLE",
     "GEMMA4_IMAGE_NOT_OPENAI_COMPATIBLE",
     "OLLAMA_GEMMA2_PROBE_SCHEMA_INVALID",
     "GITLEAKS_NOT_INSTALLED"
   ],
-  "changeset": {
-    "archive_available": false,
-    "expected_sha256": "1b19f4254aa7763081514925d23892fff53a0a78ae0c295d31a01f4ab51add59",
-    "verified": false
-  },
   "cycle": "LLM-0 Governance + Docker Local LLM Smoke",
-  "final_commit_sha": "PENDING_FINAL_COMMIT_SHA_REPORTED_AFTER_PUSH",
+  "implementation_commit_sha": "5f5adf3b26e73c88dd1ac0cd1ed9969b1f9b2eab",
   "model_config_summary": {
     "baseline_context": 16384,
     "concurrency": 1,
@@ -26,25 +26,44 @@
     "model_family": "Gemma 4 E2B",
     "model_supported_context": 131072,
     "physical_batch": 512,
+    "real_model_benchmark": "not_completed_in_llm_0",
     "seed": 42,
     "temperature": 0.01,
     "threads": 12,
     "truncate_middle": "forbidden",
     "validated_operational_context": null
   },
+  "report_commit_sha": null,
   "report_paths": {
     "artifact_manifest": "reports/runs/2026-07-15_llm_0_governance_docker_smoke/ARTIFACT_MANIFEST.json",
+    "checksums": "reports/runs/2026-07-15_llm_0_governance_docker_smoke/CHECKSUMS.sha256",
     "defects": "reports/runs/2026-07-15_llm_0_governance_docker_smoke/DEFECTS.md",
-    "model_run_summary": "reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.json",
+    "handoff": "reports/runs/2026-07-15_llm_0_governance_docker_smoke/HANDOFF.json",
     "summary": "reports/runs/2026-07-15_llm_0_governance_docker_smoke/SUMMARY.md",
     "test_results": "reports/runs/2026-07-15_llm_0_governance_docker_smoke/TEST_RESULTS.md"
   },
-  "test_commands": [
-    "python -m pytest -q",
-    "docker build -f docker/Dockerfile.worker -t journal-factory-worker:llm0 .",
-    "docker run --rm journal-factory-worker:llm0 synthetic-smoke --mock --context 16384 --max-output 1536 --prompt-template auto_jinja",
-    "python -m journal_factory.llm.host_runner synthetic-smoke --mock --output reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.mock.json",
-    "python -m journal_factory.llm.host_runner synthetic-smoke --base-url http://localhost:11434 --model gemma2:2b --runtime ollama-openai-compatible --context 8192 --max-output 1536 --temperature 0.01 --seed 42 --threads 12 --gpu-layers 34 --concurrency 1 --prompt-template auto_jinja --output reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.ollama_gemma2_probe.json",
-    "python -m journal_factory.llm.host_runner validate-public-handoff reports/runs/2026-07-15_llm_0_governance_docker_smoke/HANDOFF.json"
+  "status": "BLOCKED",
+  "test_records": [
+    {
+      "command": "python -m pytest -q",
+      "name": "pytest",
+      "result": "PASS"
+    },
+    {
+      "command": "docker build -f docker/Dockerfile.worker -t journal-factory-worker:llm0 .",
+      "name": "docker_worker_build",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m journal_factory.llm.host_runner synthetic-smoke --mock --output reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.mock.json",
+      "name": "mock_transport_schema_id_contract",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m journal_factory.llm.host_runner synthetic-smoke --base-url http://localhost:11434 --model gemma2:2b --runtime ollama-openai-compatible --context 8192 --max-output 1536 --temperature 0.01 --seed 42 --threads 12 --gpu-layers 34 --concurrency 1 --prompt-template auto_jinja --output reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.ollama_gemma2_probe.json",
+      "name": "non_target_ollama_probe",
+      "notes": "Non-target model failed closed on schema/ID contract.",
+      "result": "FAIL"
+    }
   ]
 }

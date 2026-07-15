@@ -1,0 +1,56 @@
+{
+  "artifact_data_classes": [
+    "public_code",
+    "public_docs",
+    "sanitized_reports",
+    "docker_config"
+  ],
+  "base_sha": "5f5adf3b26e73c88dd1ac0cd1ed9969b1f9b2eab",
+  "blockers": [],
+  "cycle": "LLM-0.1 Contract Alignment And Governance Repair",
+  "implementation_commit_sha": "f78afaa72a7cad0527a295e85a20e980cbc9ee98",
+  "model_config_summary": {
+    "active_prompt": "skills/journal_builder/prompts/paragraph_classifier/v1/system.txt",
+    "active_schema": "skills/journal_builder/schemas/paragraph_classifier_output.v1.schema.json",
+    "mock_transport_only": true,
+    "real_model_benchmark": "not_run_in_llm_0_1",
+    "validated_operational_context": null
+  },
+  "report_commit_sha": null,
+  "report_paths": {
+    "artifact_manifest": "reports/runs/2026-07-16_llm_0_1_contract_alignment_governance_repair/ARTIFACT_MANIFEST.json",
+    "checksums": "reports/runs/2026-07-16_llm_0_1_contract_alignment_governance_repair/CHECKSUMS.sha256",
+    "defects": "reports/runs/2026-07-16_llm_0_1_contract_alignment_governance_repair/DEFECTS.md",
+    "handoff": "reports/runs/2026-07-16_llm_0_1_contract_alignment_governance_repair/HANDOFF.json",
+    "summary": "reports/runs/2026-07-16_llm_0_1_contract_alignment_governance_repair/SUMMARY.md",
+    "test_results": "reports/runs/2026-07-16_llm_0_1_contract_alignment_governance_repair/TEST_RESULTS.md"
+  },
+  "status": "COMPLETED",
+  "test_records": [
+    {
+      "command": "python -m pytest -q",
+      "name": "pytest",
+      "result": "PASS"
+    },
+    {
+      "command": "docker build -f docker/Dockerfile.worker -t journal-factory-worker:llm0-1 .",
+      "name": "docker_worker_build",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m journal_factory.llm.host_runner synthetic-smoke --mock --output reports/runs/2026-07-16_llm_0_1_contract_alignment_governance_repair/MODEL_RUN_SUMMARY.mock.json",
+      "name": "mock_transport_schema_id_contract",
+      "result": "PASS"
+    },
+    {
+      "command": "docker run --rm journal-factory-worker:llm0-1 synthetic-smoke --mock --context 16384 --max-output 1536 --prompt-template auto_jinja",
+      "name": "worker_image_mock_smoke",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m journal_factory.llm.host_runner validate-public-handoff reports/runs/2026-07-16_llm_0_1_contract_alignment_governance_repair/HANDOFF.json",
+      "name": "handoff_schema_validation",
+      "result": "PASS"
+    }
+  ]
+}

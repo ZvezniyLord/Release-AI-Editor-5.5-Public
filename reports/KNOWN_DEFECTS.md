@@ -4,14 +4,6 @@ Date: 2026-07-15
 
 ## Open
 
-### LLM-0 CHANGESET_ARCHIVE_UNAVAILABLE
-
-evidence:
-The requested `JOURNAL_FACTORY_AI_GOVERNANCE_CHANGESET.zip` was not available in the accessible workspace or checked download locations. The expected SHA-256 could not be verified.
-
-status:
-Open. The LLM-0 public integration was implemented from the prompt and recorded fail-closed.
-
 ### LLM-0 TARGET_GEMMA4_E2B_RUNTIME_NOT_AVAILABLE
 
 evidence:
@@ -77,6 +69,21 @@ status:
 Open. Full journal PASS remains forbidden.
 
 ## Closed Or Superseded
+
+### LLM-0 CHANGESET_ARCHIVE_UNAVAILABLE
+
+status:
+Closed in LLM-0.1 as a transfer limitation. The required governance files, prompt/schema contract, handoff protocol, and Docker security changes are now implemented directly in the repository and verified.
+
+### LLM-0 HANDOFF_PLACEHOLDER_SHA
+
+status:
+Closed in LLM-0.1. The previous placeholder was removed and the handoff protocol now uses `base_sha`, `implementation_commit_sha`, and `report_commit_sha`.
+
+### LLM-0 V1_CONTRACT_MISMATCH
+
+status:
+Closed in LLM-0.1. The active v1 contract now uses `fragment_status`, `state_update`, `blocks`, `problems`, and `next_action` with the required business type names.
 
 ### GOLDEN_BASELINE_AUDIT was not real assembly
 

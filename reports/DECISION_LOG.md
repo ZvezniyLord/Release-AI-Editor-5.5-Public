@@ -143,3 +143,25 @@ Public pytest passed with 32 tests. Docker worker build passed. Worker synthetic
 
 status:
 BLOCKED. Do not start A020, style cleanup, journal regeneration, or TOC.
+
+## 2026-07-16 - Align Local LLM Contract With Journal Builder V1
+
+problem:
+LLM-0 added useful Docker/client/chunking foundations, but its classifier schema did not match the current journal builder contract. It used a `paragraphs` wrapper and renamed business types such as `empty_paragraph`, `affiliation`, and `main_text`.
+
+evidence:
+The LLM-0 schema expected `schema_version`, `prompt_version`, and `paragraphs`. The required contract uses `fragment_status`, `state_update`, `blocks`, `problems`, and `next_action`. The current business contract keeps ORCID under `service_data` in v1.
+
+options:
+1. Replace LLM-0 entirely.
+2. Preserve LLM-0 foundation and add a versioned `journal_builder` skill with the correct v1 prompt/schema.
+3. Promote an ORCID-specific v2 immediately.
+
+decision:
+Choose option 2. Preserve Docker/client/chunking code, add authoritative v1 under `skills/journal_builder`, keep v2 as candidate only, and update validators/tests/reports.
+
+verification:
+Public pytest passed with 35 tests. Docker worker build passed. Worker image mock smoke passed. Handoff schema validation passed.
+
+status:
+Completed. Real Gemma 4 E2B benchmark is explicitly deferred to LLM-0.2.
