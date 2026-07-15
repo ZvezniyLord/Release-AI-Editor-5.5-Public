@@ -108,6 +108,13 @@ class OpenAICompatibleClient:
         try:
             with request.urlopen(req, timeout=self.timeout_seconds) as response:
                 raw = response.read().decode("utf-8")
+        except error.HTTPError as exc:
+            detail = exc.read().decode("utf-8", errors="replace")
+            if detail:
+                raise LLMRuntimeError(
+                    f"local LLM runtime unavailable: HTTP {exc.code} {exc.reason}: {detail[:500]}"
+                ) from exc
+            raise LLMRuntimeError(f"local LLM runtime unavailable: HTTP {exc.code} {exc.reason}") from exc
         except error.URLError as exc:
             raise LLMRuntimeError(f"local LLM runtime unavailable: {exc}") from exc
         try:

@@ -9,6 +9,11 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+from .benchmark import (
+    DEFAULT_FIXTURE_PATH,
+    BenchmarkConfig,
+    run_real_gemma_benchmark,
+)
 from .chunking import chunk_paragraphs
 from .client import ChatClient, OpenAICompatibleClient, StaticJSONClient
 from .contracts import (
@@ -180,6 +185,39 @@ def command_synthetic_smoke(args: argparse.Namespace) -> int:
     return 0 if summary["status"] == "COMPLETED" else 2
 
 
+def command_real_benchmark(args: argparse.Namespace) -> int:
+    client = _client_from_env(args)
+    prompt_templates = tuple(item.strip() for item in args.prompt_templates.split(",") if item.strip())
+    if not prompt_templates:
+        raise RuntimeError("--prompt-templates must contain at least one prompt template")
+    config = BenchmarkConfig(
+        model_identifier=args.model or os.environ.get("LLM_MODEL") or "synthetic-static-json",
+        model_file_sha256=os.environ.get("LLM_MODEL_SHA256"),
+        runtime=args.runtime,
+        endpoint=None if args.mock else (args.base_url or os.environ.get("LLM_BASE_URL")),
+        model_supported_context=args.model_supported_context,
+        context=args.context,
+        max_output=args.max_output,
+        temperature=args.temperature,
+        seed=args.seed,
+        threads=args.threads,
+        gpu_layers=args.gpu_layers,
+        concurrency=args.concurrency,
+        prompt_templates=prompt_templates,
+        response_format=args.response_format,
+        repeat_count=args.repeat_count,
+        real_model=not args.mock,
+        docker_image_name=os.environ.get("LLM_DOCKER_IMAGE_NAME"),
+        docker_image_digest=os.environ.get("LLM_DOCKER_IMAGE_DIGEST"),
+    )
+    summary = run_real_gemma_benchmark(client, config, fixture_path=Path(args.fixture))
+    if args.output:
+        write_json(Path(args.output), summary)
+    else:
+        print(json.dumps(summary, ensure_ascii=False, indent=2, sort_keys=True))
+    return 0 if summary["status"] == "COMPLETED" else 2
+
+
 def command_health(args: argparse.Namespace) -> int:
     client = _client_from_env(args)
     if not isinstance(client, OpenAICompatibleClient):
@@ -222,6 +260,30 @@ def build_parser() -> argparse.ArgumentParser:
             cmd.set_defaults(func=command_synthetic_smoke)
         else:
             cmd.set_defaults(func=command_health)
+    benchmark = sub.add_parser("real-benchmark")
+    benchmark.add_argument("--base-url")
+    benchmark.add_argument("--model")
+    benchmark.add_argument("--timeout", type=float, default=180.0)
+    benchmark.add_argument("--mock", action="store_true")
+    benchmark.add_argument("--runtime", default="openai-compatible-local")
+    benchmark.add_argument("--output")
+    benchmark.add_argument("--fixture", default=str(DEFAULT_FIXTURE_PATH))
+    benchmark.add_argument("--model-supported-context", type=int, default=131072)
+    benchmark.add_argument("--context", type=int, default=16384)
+    benchmark.add_argument("--max-output", type=int, default=2048)
+    benchmark.add_argument("--temperature", type=float, default=0.01)
+    benchmark.add_argument("--seed", type=int, default=42)
+    benchmark.add_argument("--threads", type=int, default=12)
+    benchmark.add_argument("--gpu-layers", type=int, default=34)
+    benchmark.add_argument("--concurrency", type=int, default=1)
+    benchmark.add_argument("--prompt-templates", default="auto_jinja,manual_chatml")
+    benchmark.add_argument(
+        "--response-format",
+        choices=["json_schema", "json_object", "none"],
+        default="json_schema",
+    )
+    benchmark.add_argument("--repeat-count", type=int, default=1)
+    benchmark.set_defaults(func=command_real_benchmark)
     validate = sub.add_parser("validate-public-handoff")
     validate.add_argument("path")
     validate.set_defaults(func=command_validate_handoff)
