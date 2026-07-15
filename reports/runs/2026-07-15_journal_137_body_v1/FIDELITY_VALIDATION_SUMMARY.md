@@ -2,6 +2,8 @@
 
 Run: `2026-07-15_journal_137_body_v1`
 
+Classification: `GOLDEN_BASELINE_AUDIT`
+
 Status: FAIL
 
 ## Counts
@@ -22,7 +24,7 @@ Status: FAIL
 ## Review Items
 
 - One near-blank rendered page needs editor review.
-- BODY_V1 is not a production pass. Manual review is mandatory.
+- BODY_V1 is not a production pass and not a raw-source assembly proof. Manual review is mandatory for any future body artifact.
 
 ## TOC
 

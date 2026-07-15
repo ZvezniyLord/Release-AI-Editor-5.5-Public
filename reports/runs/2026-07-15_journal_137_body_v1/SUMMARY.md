@@ -2,9 +2,15 @@
 
 Run: `2026-07-15_journal_137_body_v1`
 
+Classification: `GOLDEN_BASELINE_AUDIT`
+
 Date: 2026-07-15
 
-Scope: Task 2 - private full body smoke for journal 137 without TOC.
+Scope: private golden-baseline auditor/render smoke for journal 137 without TOC.
+
+Important correction:
+
+This run is not evidence of real journal assembly from raw source materials. It used the approved golden journal as the document basis, removed TOC, and checked renderer/auditor behavior. It is retained only as `GOLDEN_BASELINE_AUDIT`.
 
 ## Public Safety
 
@@ -12,6 +18,7 @@ Scope: Task 2 - private full body smoke for journal 137 without TOC.
 - This public report contains only sanitized counts and internal article IDs.
 - `toc_core` was not changed.
 - TOC was not generated.
+- The run must not be treated as raw-source extraction, matching, normalization, or ETALON assembly proof.
 
 ## Private Outputs
 
@@ -57,4 +64,4 @@ The BODY_V1 document contains the temporary marker `TOC NOT GENERATED IN THIS CY
 
 ## Status
 
-Stop for manual editor review. Do not start TOC and do not continue a new architecture cycle.
+Superseded by Task 2.1 raw-source-to-ETALON assembly. Do not start TOC.

@@ -2,6 +2,8 @@
 
 Run: `2026-07-15_journal_137_body_v1`
 
+Classification: `GOLDEN_BASELINE_AUDIT`
+
 Status: REVIEW
 
 ## Counts
@@ -31,4 +33,4 @@ Status: REVIEW
 
 ## Notes
 
-No foreign source styles were detected in the final private BODY_V1 document. Direct formatting warnings remain REVIEW items because some direct formatting is allowed for scientific notation, emphasis, and table/object fidelity.
+No foreign source styles were detected in the private BODY_V1 baseline document. This does not prove raw-source style normalization, because BODY_V1 was based on the approved golden journal and is superseded by Task 2.1.

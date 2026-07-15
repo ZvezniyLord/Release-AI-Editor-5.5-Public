@@ -77,3 +77,25 @@ Private BODY_V1 was generated and rendered to PDF/PNGs. Sanitized metrics: 20 ar
 
 status:
 FAIL for review blockers: 1 source-text-loss finding, 1 source-object-loss finding, and 1 near-blank page review finding. Manual review is required. TOC remains disabled.
+
+## 2026-07-15 - Reclassify Golden Baseline And Assemble From Raw Sources
+
+problem:
+The prior private `BODY_V1` run used the approved golden journal as the document basis and removed TOC. That validated renderer/auditor behavior, but it did not validate raw article extraction, matching, normalization, style hygiene, object preservation, or ETALON assembly.
+
+evidence:
+The previous report recorded that `BODY_V1` came from the approved golden document. The new Task 2.1 requirement explicitly forbids using the golden journal as source or base and allows it only after independent assembly as a read-only comparison reference.
+
+options:
+1. Continue treating `BODY_V1` as the journal body assembly.
+2. Reclassify it as `GOLDEN_BASELINE_AUDIT` and run a separate raw-source-to-ETALON assembly.
+3. Start TOC work before raw-source assembly is stable.
+
+decision:
+Choose option 2. Keep the previous artifacts as a baseline auditor check only, then assemble Task 2.1 from raw source article DOCX files into clean ETALON with TOC disabled.
+
+verification:
+The Task 2.1 private run reports `assembly_origin = RAW_SOURCE_TO_ETALON`, generated private DOCX/PDF/render artifacts, used the golden journal only for post-assembly comparison, and committed only sanitized public reports. Public mirror pytest passed with 22 tests; private workspace pytest passed with 29 tests and 1 warning.
+
+status:
+FAIL for review blockers: one internal article ID remains REVIEW, assembled article count is 19 of 20, and forbidden direct-formatting findings remain. TOC remains disabled.
