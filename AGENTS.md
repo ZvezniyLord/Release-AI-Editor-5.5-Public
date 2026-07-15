@@ -9,7 +9,9 @@
 4. /docs/EXECUTION_FLOW.md
 5. /docs/KEYWORDS_AND_MARKERS.md
 6. /docs/MODULE_DESCRIPTIONS.md
-7. AGENT_CONTEXT.md
+7. /docs/CODEX_JOURNAL_FACTORY_CYCLIC_EXECUTION_PLAN.md
+8. /docs/JOURNAL_CREATION_DECISION_PLAYBOOK.md
+9. AGENT_CONTEXT.md
 
 Після цього можна виконувати точковий пошук по файлах замість повного сканування.
 

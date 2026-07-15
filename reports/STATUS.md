@@ -18,3 +18,14 @@ Current state:
 - Journal pipeline, TOC, LLM, and DOCX business logic were not intentionally changed.
 
 Next gate: keep future fixtures synthetic and run the security checklist before each public push.
+
+## Decision Logging Requirement
+
+Every next cycle must document decisions in `reports/DECISION_LOG.md` using this format:
+
+- problem
+- evidence
+- options
+- decision
+- verification
+- status
