@@ -79,3 +79,38 @@ Verification:
 Next gate:
 
 Stop for manual editor review and targeted repair of Task 2.1 blockers. Do not start TOC.
+
+## Task 2.2 Reproducible Raw Assembly
+
+Task 2.2 made the raw-source assembly logic reproducible in public code without private paths or private data.
+
+Added public assembly modules:
+
+- `journal_factory/assembly/inventory.py`
+- `journal_factory/assembly/matcher.py`
+- `journal_factory/assembly/snapshot.py`
+- `journal_factory/assembly/normalizer.py`
+- `journal_factory/assembly/package_importer.py`
+- `journal_factory/assembly/provenance.py`
+- `journal_factory/assembly/audits.py`
+- `journal_factory/assembly/ooxml.py`
+- `journal_factory/assembly/synthetic_fixture.py`
+
+Task 2.2 result:
+
+- A020 status: REVIEW.
+- A020 automatic insertion: blocked.
+- V2 created: no.
+- Assembled article count remains: 19.
+- Text/object/identifier losses remain: 0 / 0 / 0 for automatically assembled articles.
+- Synthetic raw-source-to-ETALON build: PASS.
+- Public pytest: PASS, 25 passed.
+- Private pytest: PASS, 29 passed, 1 warning.
+- Direct-formatting histogram rows: 81.
+- Direct-formatting histogram findings: 14630.
+- Histogram safe-to-auto-fix findings: 8931.
+- Histogram not-safe-to-auto-fix findings: 5699.
+
+Task 2.2 stop condition:
+
+Stop for editor decision on A020. Do not start TOC. Do not start Task 2.3 style cleanup.

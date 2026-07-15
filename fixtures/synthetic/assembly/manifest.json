@@ -1,0 +1,28 @@
+{
+  "description": "Synthetic raw-source assembly fixture metadata. Binary DOCX fixtures are generated at test time and are not committed.",
+  "articles": [
+    {
+      "article_id": "SYN-A001",
+      "case": "exact author/title match"
+    },
+    {
+      "article_id": "SYN-A002",
+      "case": "transliterated author match"
+    },
+    {
+      "article_id": "SYN-A003",
+      "case": "ambiguous match"
+    }
+  ],
+  "coverage": [
+    "clean ETALON",
+    "source articles",
+    "image relationship",
+    "chart with embedded workbook",
+    "table",
+    "equation/drawing",
+    "duplicated drawing/bookmark IDs",
+    "source character/table styles",
+    "mc:Ignorable prefixes"
+  ]
+}

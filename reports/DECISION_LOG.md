@@ -99,3 +99,25 @@ The Task 2.1 private run reports `assembly_origin = RAW_SOURCE_TO_ETALON`, gener
 
 status:
 FAIL for review blockers: one internal article ID remains REVIEW, assembled article count is 19 of 20, and forbidden direct-formatting findings remain. TOC remains disabled.
+
+## 2026-07-15 - Reproducible Assembly Module And A020 Gate
+
+problem:
+The Task 2.1 raw-source assembly runner was private and ignored under `build/`, so the public repository contained only sanitized results, not the reproducible assembly logic. A020 also remained REVIEW and blocked 20/20 assembly.
+
+evidence:
+Task 2.1 public reports showed `assembly_origin = RAW_SOURCE_TO_ETALON`, but the code for relationship copying, namespace cleanup, dangling style cleanup, internal ID normalization, and provenance generation was not reviewable in public. The A020 private evidence check found author evidence, but not independent title or DOI evidence.
+
+options:
+1. Commit private runner as-is, including local paths and conference hardcode.
+2. Extract generic assembly modules without private paths/data and add synthetic regression tests.
+3. Insert A020 because it is the remaining unused file.
+
+decision:
+Choose option 2. Add reusable public modules under `journal_factory/assembly`, synthetic fixtures generated at test time, and regression tests for the Task 2.1 OOXML failures. Do not insert A020 without two independent semantic evidence items.
+
+verification:
+Public pytest passed with 25 tests. Private pytest passed with 29 tests and 1 warning. Synthetic raw-source-to-ETALON build passed with 2 matched synthetic articles, 1 synthetic REVIEW case, and 0 missing package relationship targets.
+
+status:
+Done for reproducible assembly code and regression coverage. A020 remains REVIEW; V2 was not created. TOC and style cleanup remain blocked.

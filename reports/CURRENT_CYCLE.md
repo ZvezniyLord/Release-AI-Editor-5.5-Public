@@ -2,70 +2,68 @@
 
 Date: 2026-07-15
 
-Cycle: Task 2.1 - real journal 137 assembly from raw materials
-
-assembly_origin = RAW_SOURCE_TO_ETALON
+Cycle: Task 2.2 - reproducible raw-source assembly and A020 matching gate
 
 Scope:
 
-- Build the journal 137 body from raw source article DOCX files and the clean ETALON document.
+- Make Task 2.1 raw-source assembly code reproducible in the public repository.
+- Preserve existing private V1 artifacts and do not overwrite them.
 - Do not generate or insert TOC.
 - Do not change `toc_core`.
-- Do not use the approved golden journal as a source or assembly base.
-- Do not use LLM to edit DOCX.
+- Do not begin mass style cleanup.
 - Do not commit private DOCX, PDF, source article text, author names, ORCID values, file names, or local paths.
 
-Execution:
+Public code added:
 
-- Private conference package inventory and SHA-256 backup were created.
-- Article manifest was built from the private workbook/application evidence.
-- Strict automatic insertion required independent author evidence and title evidence.
-- One internal article ID remained REVIEW and was not inserted automatically.
-- Source snapshots were created from OOXML, not only `python-docx` paragraphs.
-- Normalized article DOCX packages were created privately.
-- The assembled journal body was generated from clean ETALON plus normalized raw-source article content.
-- The approved golden journal was used only after assembly for read-only comparison.
-- PDF render, page PNG render, and contact sheet were generated privately.
+- `journal_factory/assembly/inventory.py`
+- `journal_factory/assembly/matcher.py`
+- `journal_factory/assembly/snapshot.py`
+- `journal_factory/assembly/normalizer.py`
+- `journal_factory/assembly/package_importer.py`
+- `journal_factory/assembly/provenance.py`
+- `journal_factory/assembly/audits.py`
+- `journal_factory/assembly/ooxml.py`
+- `journal_factory/assembly/synthetic_fixture.py`
 
-Sanitized results:
+Synthetic coverage:
 
-- Status: FAIL.
-- Source article count: 20.
-- Matched article count: 19.
-- REVIEW match count: 1.
-- BLOCKED match count: 0.
-- Assembled article count: 19.
-- Manifest section count: 11.
-- Assembled SECTION count: 11.
-- Title count: 19.
-- Author block count: 19.
-- Canonical style count: 74.
-- Used final style IDs: `11`, `AUTOR`, `REF-TITLE`, `REFER`, `SECTION`, `TABLETEXT`, `UDC`, `a0`, `af6`, `pip`.
-- Foreign style count: 0.
-- Allowed direct-formatting count: 705.
-- Review direct-formatting count: 10185.
-- Forbidden direct-formatting count: 1806.
-- Unknown text loss count: 0.
-- Unknown object loss count: 0.
-- DOI loss count: 0.
-- UDC loss count: 0.
-- ORCID loss count: 0.
-- Duplicate paragraph count: 63.
-- Extra non-source text count: 0.
-- Rendered page count: 108.
-- Near-blank page count: 5.
+- clean ETALON package generated at test time;
+- source articles generated at test time;
+- exact author/title match;
+- transliterated author match;
+- ambiguous match;
+- image relationship;
+- chart with embedded workbook relationship;
+- table;
+- equation/drawing;
+- duplicated drawing/bookmark IDs;
+- source character/table styles;
+- `mc:Ignorable` prefix cleanup.
 
-Fail conditions:
+Private A020 matching result:
 
-- `ARTICLE_MATCH_AMBIGUOUS`
-- `ARTICLE_COUNT_MISMATCH`
-- `FORBIDDEN_DIRECT_FORMATTING`
+- A020 status: REVIEW.
+- Automatic insertion allowed: no.
+- Semantic author evidence: true.
+- Semantic title evidence: false.
+- Semantic DOI evidence: false.
+- V2 created: no.
+- Private `MATCH_REVIEW_PACKET` created.
+
+Direct-formatting histogram:
+
+- Histogram rows: 81.
+- Total findings represented: 14630.
+- Safe-to-auto-fix findings: 8931.
+- Not-safe-to-auto-fix findings: 5699.
+- Top categories: direct font in body/reference, direct size in reference/body, direct color in references.
 
 Verification:
 
-- Public mirror pytest: PASS, 22 passed.
-- Private workspace pytest: PASS, 29 passed, 1 warning.
+- Public pytest: PASS, 25 passed.
+- Private pytest: PASS, 29 passed, 1 warning.
+- Synthetic raw-source-to-ETALON build: PASS, 2 matched synthetic articles and 1 synthetic REVIEW case, 0 missing package relationship targets.
 
 Status:
 
-Stop for manual review and blocker repair. Do not start TOC and do not continue a new architecture cycle.
+Stop for editor decision on A020. Do not start TOC and do not start Task 2.3 style cleanup.
