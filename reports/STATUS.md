@@ -15,9 +15,16 @@ Current state:
 - Private operational audit was replaced with a synthetic audit note.
 - Private DOCX/PDF/ZIP artifacts were not copied.
 - Build output, logs, caches, and local secrets were not copied.
-- Journal pipeline, TOC, LLM, and DOCX business logic were not intentionally changed.
+- Journal pipeline, LLM, article processing, and DOCX business logic outside TOC were not intentionally changed.
+- Task 1 TOC vertical slice is implemented with synthetic-only fixtures and artifacts.
+- TOC parser now treats `SECTION` as level 1, `AUTOR` as level 2, and `Назва1` as level 3.
+- Generic Word `Title` / `Title1` is not treated as a journal section.
+- Incomplete author/title pairs fail closed with `TOC_INPUT_INVALID`.
+- TOC table output is audited fail-closed with `TOC_VISUAL_CONTRACT_INVALID`.
+- Synthetic TOC artifact audit status: PASS.
+- Full pytest status: PASS, 22 passed.
 
-Next gate: keep future fixtures synthetic and run the security checklist before each public push.
+Next gate: regenerate a private full-journal smoke artifact with the updated TOC code before claiming production journal PASS. Do not commit private journal documents or personal data.
 
 ## Decision Logging Requirement
 

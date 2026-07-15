@@ -13,6 +13,20 @@ class WordComError(RuntimeError):
     pass
 
 
+TOC_VISUAL_CONTRACT_INVALID = "TOC_VISUAL_CONTRACT_INVALID"
+TOC_COLUMN_WIDTHS_TWIPS = (661, 8170, 797)
+WD_AUTOFIT_FIXED = 0
+WD_PREFERRED_WIDTH_POINTS = 3
+
+
+class TocVisualContractError(RuntimeError):
+    code = TOC_VISUAL_CONTRACT_INVALID
+
+    def __init__(self, message: str):
+        self.message = message
+        super().__init__(f"{TOC_VISUAL_CONTRACT_INVALID}: {message}")
+
+
 @dataclass(frozen=True)
 class TableStyles:
     section: str = "Tab_SEC"
@@ -111,16 +125,72 @@ def ensure_rows(table, target_row_count: int) -> None:
         table.Rows.Add()
 
 
+def _twips_to_points(value: int) -> float:
+    return value / 20.0
+
+
+def _set_fixed_columns(table) -> None:
+    try:
+        if table.Columns.Count != 3:
+            raise TocVisualContractError(f"expected 3 table columns, found {table.Columns.Count}")
+    except TocVisualContractError:
+        raise
+    except Exception as error:
+        raise TocVisualContractError("could not inspect table column count") from error
+
+    try:
+        table.AllowAutoFit = False
+    except Exception:
+        pass
+    try:
+        table.AutoFitBehavior(WD_AUTOFIT_FIXED)
+    except Exception:
+        pass
+
+    for index, width_twips in enumerate(TOC_COLUMN_WIDTHS_TWIPS, start=1):
+        width_points = _twips_to_points(width_twips)
+        try:
+            table.Columns(index).Width = width_points
+        except Exception:
+            pass
+        try:
+            table.Columns(index).PreferredWidthType = WD_PREFERRED_WIDTH_POINTS
+        except Exception:
+            pass
+        try:
+            table.Columns(index).PreferredWidth = width_points
+        except Exception:
+            pass
+
+
+def _clear_row_cells(row) -> None:
+    for cell in row.Cells:
+        cell.Range.Text = ""
+
+
+def enforce_table_contract(table) -> None:
+    _set_fixed_columns(table)
+    for row_index in range(1, table.Rows.Count + 1):
+        row = table.Rows(row_index)
+        if row.Cells.Count != 3:
+            raise TocVisualContractError(
+                f"expected 3 cells in row {row_index}, found {row.Cells.Count}"
+            )
+        for cell_index in (1, 3):
+            if _clean_cell_text(row.Cells(cell_index).Range.Text):
+                raise TocVisualContractError(f"side cell {cell_index} in row {row_index} is not empty")
+
+
 def _clear_table(table) -> None:
     # Keep table formatting but remove existing content/rows.
+    _set_fixed_columns(table)
     for idx in range(table.Rows.Count, 1, -1):
         try:
             table.Rows(idx).Delete()
         except Exception:
             pass
     try:
-        for cell in table.Rows(1).Cells:
-            cell.Range.Text = ""
+        _clear_row_cells(table.Rows(1))
     except Exception:
         pass
 
@@ -132,6 +202,9 @@ def fill_table(table, rows, styles: TableStyles) -> None:
 
     for index, row in enumerate(rows, start=1):
         row_obj = table.Rows(index)
+        if row_obj.Cells.Count != 3:
+            raise TocVisualContractError(f"expected 3 cells in row {index}, found {row_obj.Cells.Count}")
+        _clear_row_cells(row_obj)
         cell = row_obj.Cells(2)
         if row.kind == "section":
             cell.Range.Text = row.section
@@ -146,29 +219,25 @@ def fill_table(table, rows, styles: TableStyles) -> None:
             except Exception:
                 pass
         elif row.kind == "item":
-            if row.authors:
-                cell.Range.Text = f"{row.authors}\n{row.title}".strip()
-                try:
-                    cell.Range.Paragraphs(1).Range.Style = styles.authors
-                except Exception:
-                    pass
-                try:
-                    if cell.Range.Paragraphs.Count >= 2:
-                        cell.Range.Paragraphs(2).Range.Style = styles.title
-                except Exception:
-                    pass
-            else:
-                cell.Range.Text = row.title
-                try:
-                    cell.Range.Style = styles.title
-                except Exception:
-                    pass
+            if not row.authors or not row.title:
+                raise TocVisualContractError("article row requires both authors and title")
+            cell.Range.Text = f"{row.authors}\r{row.title}".strip()
+            try:
+                cell.Range.Paragraphs(1).Range.Style = styles.authors
+            except Exception:
+                pass
+            try:
+                if cell.Range.Paragraphs.Count >= 2:
+                    cell.Range.Paragraphs(2).Range.Style = styles.title
+            except Exception:
+                pass
         elif row.kind == "free_listeners":
             cell.Range.Text = row.free_listeners
             try:
                 cell.Range.Style = styles.authors
             except Exception:
                 pass
+    enforce_table_contract(table)
 
 
 def extract_outline_from_word(document) -> list[tuple[int, str]]:

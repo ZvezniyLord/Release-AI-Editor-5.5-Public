@@ -15,10 +15,11 @@ DEFAULT_NAME_LEVELS = {
     "heading 1": 1,
     "heading 2": 2,
     "heading 3": 3,
-    "title": 1,
-    "title 1": 1,
-    "назва 1": 1,
-    "назва1": 1,
+    "autor": 2,
+    "author": 2,
+    "автор": 2,
+    "назва 1": 3,
+    "назва1": 3,
     "заголовок 1": 1,
     "заголовок 2": 2,
     "заголовок 3": 3,
@@ -34,13 +35,25 @@ DEFAULT_ID_LEVELS = {
     "heading 2": 2,
     "heading3": 3,
     "heading 3": 3,
-    "title": 1,
-    "title1": 1,
-    "title 1": 1,
+    "autor": 2,
+    "author": 2,
+    "автор": 2,
+    "назва1": 3,
+    "назва 1": 3,
     "section": 1,
     "секція": 1,
     "секція заголовок": 1,
 }
+
+TOC_INPUT_INVALID = "TOC_INPUT_INVALID"
+
+
+class TocInputError(ValueError):
+    code = TOC_INPUT_INVALID
+
+    def __init__(self, message: str):
+        self.message = message
+        super().__init__(f"{TOC_INPUT_INVALID}: {message}")
 
 
 @dataclass(frozen=True)
@@ -131,7 +144,16 @@ def _level_from_style_id(style_id: str | None) -> int | None:
     if not style_id:
         return None
     key = style_id.casefold().strip()
-    return DEFAULT_ID_LEVELS.get(key)
+    direct = DEFAULT_ID_LEVELS.get(key)
+    if direct is not None:
+        return direct
+    compact = key.replace("_", "").replace("-", "").replace(" ", "")
+    direct = DEFAULT_ID_LEVELS.get(compact)
+    if direct is not None:
+        return direct
+    if "section" in compact or "секц" in compact:
+        return 1
+    return None
 
 
 def _level_from_outline_val(val: int | None) -> int | None:
@@ -170,6 +192,7 @@ def parse_outline(docx_path: Path) -> list[OutlineItem]:
         return []
 
     items: list[OutlineItem] = []
+    seen_section = False
     for p in _iter_body_paragraphs(body):
         text = _text_from_paragraph(p)
         if not text:
@@ -202,6 +225,10 @@ def parse_outline(docx_path: Path) -> list[OutlineItem]:
         if level is None:
             level = _level_from_style_id(style_id)
         if level in {1, 2, 3}:
+            if not seen_section:
+                if level != 1:
+                    continue
+                seen_section = True
             items.append(OutlineItem(level=level, text=text))
 
     return items
@@ -211,26 +238,38 @@ def build_sections(items: Iterable[OutlineItem]) -> list[Section]:
     sections: list[Section] = []
     current_section: Section | None = None
     current_authors: list[str] = []
-    last_level = None
+    article_count = 0
+
+    def fail(message: str) -> None:
+        raise TocInputError(message)
+
     for item in items:
         if item.level == 1:
+            if current_authors:
+                fail(f"author without title before section: {current_authors[-1]}")
             current_section = Section(name=item.text, items=[])
             sections.append(current_section)
             current_authors = []
-            last_level = 1
             continue
         if item.level == 2:
-            if last_level != 2:
-                current_authors = []
+            if current_section is None:
+                fail(f"author before section: {item.text}")
             if item.text:
                 current_authors.append(item.text)
-            last_level = 2
             continue
         if item.level == 3:
             if current_section is None:
-                current_section = Section(name="Без секції", items=[])
-                sections.append(current_section)
+                fail(f"title before section: {item.text}")
+            if not current_authors:
+                fail(f"title without author: {item.text}")
             authors_text = ", ".join([a for a in current_authors if a])
             current_section.items.append(SectionItem(authors=authors_text, title=item.text))
-            last_level = 3
+            article_count += 1
+            current_authors = []
+    if current_authors:
+        fail(f"author without title: {current_authors[-1]}")
+    if not sections:
+        fail("no valid journal sections found")
+    if article_count == 0:
+        fail("no complete TOC articles found")
     return sections

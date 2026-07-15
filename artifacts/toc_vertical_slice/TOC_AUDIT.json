@@ -1,0 +1,90 @@
+{
+  "status": "PASS",
+  "docx": "artifacts/toc_vertical_slice/TOC_VERTICAL_SLICE.docx",
+  "contract": {
+    "table_count": 1,
+    "column_widths_twips": [
+      661,
+      8170,
+      797
+    ],
+    "expected_column_widths_twips": [
+      661,
+      8170,
+      797
+    ],
+    "text_column": 2,
+    "journal_sections": 2,
+    "articles": 3,
+    "free_listener_rows": 1
+  },
+  "rows": [
+    {
+      "row": 1,
+      "kind": "section",
+      "central_paragraph_count": 1,
+      "central_styles": [
+        "tabsec"
+      ],
+      "side_cells_empty": true
+    },
+    {
+      "row": 2,
+      "kind": "article",
+      "central_paragraph_count": 2,
+      "central_styles": [
+        "tabpip",
+        "tabtaitl"
+      ],
+      "side_cells_empty": true
+    },
+    {
+      "row": 3,
+      "kind": "article",
+      "central_paragraph_count": 2,
+      "central_styles": [
+        "tabpip",
+        "tabtaitl"
+      ],
+      "side_cells_empty": true
+    },
+    {
+      "row": 4,
+      "kind": "section",
+      "central_paragraph_count": 1,
+      "central_styles": [
+        "tabsec"
+      ],
+      "side_cells_empty": true
+    },
+    {
+      "row": 5,
+      "kind": "article",
+      "central_paragraph_count": 2,
+      "central_styles": [
+        "tabpip",
+        "tabtaitl"
+      ],
+      "side_cells_empty": true
+    },
+    {
+      "row": 6,
+      "kind": "section",
+      "central_paragraph_count": 1,
+      "central_styles": [
+        "tabsec"
+      ],
+      "side_cells_empty": true
+    },
+    {
+      "row": 7,
+      "kind": "free_listener",
+      "central_paragraph_count": 1,
+      "central_styles": [
+        "tabpip"
+      ],
+      "side_cells_empty": true
+    }
+  ],
+  "errors": []
+}

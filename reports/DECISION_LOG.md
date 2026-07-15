@@ -33,3 +33,25 @@ The copied playbook SHA256 matches the provided source file.
 
 status:
 Done.
+
+## 2026-07-15 - TOC Vertical Slice Contract
+
+problem:
+The TOC path allowed unsafe outline interpretation and did not have a deterministic visual contract audit for the Word table layout.
+
+evidence:
+`toc_core/outline_parser.py` previously mapped generic Word `Title` / `Title1` to level 1, allowed title rows without authors, and silently created a `Без секції` fallback. The table writer did not fail closed on the required 3-column fixed-width table contract.
+
+options:
+1. Patch only the TOC parser/table path and add synthetic artifacts.
+2. Regenerate the full private journal pipeline in the public repository.
+3. Keep the existing parser behavior and document the risk.
+
+decision:
+Patch only TOC code and public synthetic fixtures. Add fail-closed errors `TOC_INPUT_INVALID` and `TOC_VISUAL_CONTRACT_INVALID`, generate synthetic visible artifacts, and keep the journal pipeline, LLM, article processing, and private documents untouched.
+
+verification:
+`python -m pytest` passed with 22 tests. `artifacts/toc_vertical_slice/TOC_AUDIT.json` reports PASS with one table, three physical columns, widths 661 / 8170 / 797 twips, central-column text only, three article rows, two journal sections, and one free-listener row.
+
+status:
+Done for the public synthetic vertical slice. Private full-journal smoke regeneration remains a known follow-up and is not committed.

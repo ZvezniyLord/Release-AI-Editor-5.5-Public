@@ -56,8 +56,8 @@ def build_toc_document(doc_path: Path, output_path: Path, template_path: Path, m
     outline = parse_outline(doc_path)
     levels = {item.level for item in outline}
     need_fallback = not {1, 2, 3}.issubset(levels)
-    sections = build_sections(outline)
     free_listener_header, free_listeners = load_free_listeners(manifest_path)
+    sections = build_sections(outline) if not need_fallback else []
     rows = build_rows(sections, free_listeners, free_listener_header=free_listener_header)
 
     styles = detect_table_styles(template_path)

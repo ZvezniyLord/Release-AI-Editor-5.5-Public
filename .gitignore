@@ -39,6 +39,10 @@ local_secrets/
 *.woff2
 *.docx
 *.dotx
+!fixtures/synthetic/toc/TOC_VERTICAL_SLICE_INPUT.docx
+!artifacts/toc_vertical_slice/TOC_VERTICAL_SLICE.docx
+!artifacts/toc_vertical_slice/TOC_VERTICAL_SLICE.pdf
+!artifacts/toc_vertical_slice/contact_sheet.png
 !ядро-реліз-інтегр/assets/templates/Jurnal.dotx
 !ядро-реліз-інтегр/assets/templates/Table.docx
 

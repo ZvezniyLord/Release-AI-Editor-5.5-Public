@@ -38,6 +38,22 @@ def test_manifest_missing(tmp_path: Path):
     assert result == []
 
 
+def test_manifest_relative_paths_resolve_from_manifest_dir(tmp_path: Path):
+    fixture_dir = tmp_path / "fixture"
+    fixture_dir.mkdir()
+    matches_path = fixture_dir / "matches.json"
+    manifest_path = fixture_dir / "manifest.json"
+
+    matches_path.write_text(
+        json.dumps({"matches": [{"match_method": "free_listener", "authors": ["Synthetic Listener"]}]}),
+        encoding="utf-8",
+    )
+    manifest_path.write_text(json.dumps({"matches_json_path": "matches.json"}), encoding="utf-8")
+
+    _, result = load_free_listeners(manifest_path)
+    assert result == ["Synthetic Listener"]
+
+
 def test_manifest_corrupt(tmp_path: Path):
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text("{bad json", encoding="utf-8")

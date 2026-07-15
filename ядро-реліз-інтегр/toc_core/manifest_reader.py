@@ -11,6 +11,13 @@ FREE_LISTENER_HEADER_FALLBACK = (
 )
 
 
+def _resolve_manifest_path(manifest_path: Path, value: str) -> Path:
+    path = Path(value)
+    if path.is_absolute():
+        return path
+    return manifest_path.parent / path
+
+
 def _load_free_listener_header(sections_path: Path | None) -> str:
     if sections_path is None or not sections_path.exists():
         return FREE_LISTENER_HEADER_FALLBACK
@@ -45,9 +52,9 @@ def load_free_listeners(manifest_path: Path | None) -> tuple[str, list[str]]:
     sections_path = None
     if isinstance(raw, dict):
         if raw.get("matches_json_path"):
-            matches_path = Path(raw["matches_json_path"])
+            matches_path = _resolve_manifest_path(manifest_path, str(raw["matches_json_path"]))
         if raw.get("sections_path"):
-            sections_path = Path(raw["sections_path"])
+            sections_path = _resolve_manifest_path(manifest_path, str(raw["sections_path"]))
     header = _load_free_listener_header(sections_path)
     if matches_path is None or not matches_path.exists():
         return header, []
