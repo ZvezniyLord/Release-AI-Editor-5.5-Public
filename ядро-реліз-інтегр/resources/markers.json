@@ -1,0 +1,153 @@
+{
+  "author_stop_markers": [
+    "анотація",
+    "annotation",
+    "abstract",
+    "ключові слова",
+    "keywords",
+    "key words",
+    "Key Words",
+    "список використаних джерел",
+    "література",
+    "references",
+    "bibliography",
+    "list of references",
+    "list of reference"
+  ],
+
+  "annotation_markers": [
+    "Анотація",
+    "Анотація:",
+    "Анотація.",
+    "Annotation",
+    "Annotation:",
+    "Abstract",
+    "Summary",
+    "Abstract:"
+  ],
+
+  "keyword_markers": [
+    "Ключові слова",
+    "Ключові слова:",
+    "Keywords",
+    "Keywords:",
+    "Key words",
+    "Key Words",
+    "Key words:"
+  ],
+
+  "reference_markers": [
+    "Список використаних джерел",
+    "Список джерел:",
+    "Список використаних джерел:",
+    "Список літератури:",
+    "Список використаної літератури",
+    "Література",
+    "Використані джерела",
+    "References",
+    "References:",
+    "Bibliography",
+    "Bibliography:",
+    "BIBLIOGRAPHY",
+    "LITERATURVERZEICHNIS",
+    "List of references",
+    "List of reference"
+  ],
+
+  "titlecase_force_capitalized": {
+    "uk": {
+      "phrases": [
+        "Майстер спорту України",
+        "Заслужений тренер України"
+      ],
+      "words": []
+    },
+    "en": {
+      "phrases": [],
+      "words": []
+    }
+  },
+
+  "titlecase_force_lowercase": {
+    "uk": {
+      "phrases": [
+        "кандидат наук",
+        "доктор наук"
+      ],
+      "words": [
+        "студент",
+        "студентка",
+        "здобувач",
+        "аспірант",
+        "аспірантка",
+        "магістрант",
+        "магістрантка",
+        "слухач",
+        "учень",
+        "старшокласник",
+        "старшокласниця",
+        "доцент",
+        "магістр",
+        "професор"
+      ]
+    },
+    "en": {
+      "phrases": [
+        "associate professor",
+        "assistant professor",
+        "full professor",
+        "postgraduate student",
+        "doctoral student",
+        "phd student",
+        "senior lecturer",
+        "lecturer",
+        "research fellow",
+        "research associate"
+      ],
+      "words": []
+    }
+  },
+
+  "author_exclude_markers": [
+    "orcid",
+    "doi",
+    "@",
+    "університет",
+    "інститут",
+    "department",
+    "university"
+  ],
+
+  "non_article_markers": [
+    "анкета",
+    "заявка",
+    "квитан",
+    "оплат",
+    "receipt",
+    "payment",
+    "довідка",
+    "справка",
+    "author info",
+    "авторська довідка",
+    "відомості про автора",
+    "відомості про авторів",
+    "інформація про автора",
+    "інформація про авторів",
+    "transaction",
+    "viber",
+    "screenshot",
+    "screen"
+  ],
+
+  "non_article_text_markers": [
+    "анкета-заявка",
+    "анкета учасника",
+    "квитанція",
+    "оплата",
+    "довідка",
+    "стовпець анкетної форми",
+    "інформація для заповнення",
+    "ім’я і прізвище автора публікації",
+    "author information"
+  ]
+}

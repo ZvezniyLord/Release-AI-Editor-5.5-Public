@@ -1,0 +1,13 @@
+{
+  "authors": [
+    "Fixture Author Alpha",
+    "Fixture Author Beta",
+    "Synthetic Researcher Gamma"
+  ],
+  "not_authors": [
+    "TEST-ORCID",
+    "Demo Institute of Public Fixtures",
+    "Synthetic Department of Example Studies",
+    "Student group TEST-101"
+  ]
+}

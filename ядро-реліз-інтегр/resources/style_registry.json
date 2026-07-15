@@ -1,0 +1,37 @@
+﻿{
+  "section": [
+    "SECTION",
+    "СЕКЦІЯ заголовок",
+    "Section",
+    "Heading 1",
+    "Заголовок 1"
+  ],
+  "author": [
+    "AUTHOR",
+    "Heading 2",
+    "Заголовок 2"
+  ],
+  "title": [
+    "TITLE",
+    "Title",
+    "Heading 3",
+    "Заголовок 3"
+  ],
+  "udc": [
+    "UDC"
+  ],
+  "references": [
+    "REFERENCES",
+    "REF-TITLE",
+    "REFER"
+  ],
+  "toc_section": [
+    "Tab_SEC"
+  ],
+  "toc_author": [
+    "Tab_PIP"
+  ],
+  "toc_title": [
+    "Tab_Taitl"
+  ]
+}
