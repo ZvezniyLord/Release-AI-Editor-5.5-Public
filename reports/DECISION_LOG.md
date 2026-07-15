@@ -121,3 +121,25 @@ Public pytest passed with 25 tests. Private pytest passed with 29 tests and 1 wa
 
 status:
 Done for reproducible assembly code and regression coverage. A020 remains REVIEW; V2 was not created. TOC and style cleanup remain blocked.
+
+## 2026-07-15 - LLM-0 Fail-Closed Integration
+
+problem:
+The LLM-0 cycle required applying a prepared changeset archive and validating a local Gemma 4 E2B Docker runtime. The archive was not accessible in the workspace, and the configured target model/runtime was not available as an OpenAI-compatible endpoint.
+
+evidence:
+The repository was at base `14f64691f925099f84afd9f0b552c68f6353cedd` before edits. The expected `JOURNAL_FACTORY_AI_GOVERNANCE_CHANGESET.zip` was not found in the sandbox attachment mount, Downloads, Desktop, the workspace root, or checked drive roots. Docker Desktop was available. The local Ollama endpoint listed `qwen3.5:latest` and `gemma2:2b`. The local `gemma4-2b-image:latest` returned 404 for `/v1/models` and `/health`.
+
+options:
+1. Stop without code changes until the archive and target runtime are supplied.
+2. Implement the public governance, Docker, schemas, validators, and synthetic tests from the prompt, but mark the cycle blocked for the missing archive and target runtime.
+3. Treat the non-target `gemma2:2b` probe as the target Gemma 4 E2B validation.
+
+decision:
+Choose option 2. Add the reproducible public LLM contract code and reports, reject the non-target model as production evidence, and preserve fail-closed blockers.
+
+verification:
+Public pytest passed with 32 tests. Docker worker build passed. Worker synthetic smoke passed in mock mode. The non-target `gemma2:2b` probe failed closed on schema validation.
+
+status:
+BLOCKED. Do not start A020, style cleanup, journal regeneration, or TOC.

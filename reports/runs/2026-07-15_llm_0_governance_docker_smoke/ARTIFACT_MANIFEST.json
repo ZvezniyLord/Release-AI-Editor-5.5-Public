@@ -1,0 +1,43 @@
+{
+  "code": [
+    "journal_factory/llm/__init__.py",
+    "journal_factory/llm/chunking.py",
+    "journal_factory/llm/client.py",
+    "journal_factory/llm/contracts.py",
+    "journal_factory/llm/host_runner.py",
+    "journal_factory/llm/public_handoff.py",
+    "journal_factory/llm/synthetic.py",
+    "journal_factory/llm/templates.py"
+  ],
+  "docker": [
+    "docker/Dockerfile.worker",
+    "docker/requirements-worker.txt",
+    "docker-compose.llm.yml"
+  ],
+  "docs": [
+    "docs/LOCAL_LLM_GOVERNANCE.md",
+    "skills/journal-llm-governance/SKILL.md"
+  ],
+  "reports": [
+    "reports/runs/2026-07-15_llm_0_governance_docker_smoke/SUMMARY.md",
+    "reports/runs/2026-07-15_llm_0_governance_docker_smoke/HANDOFF.json",
+    "reports/runs/2026-07-15_llm_0_governance_docker_smoke/TEST_RESULTS.md",
+    "reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.json",
+    "reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.mock.json",
+    "reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.manual_mock.json",
+    "reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.mock_8192.json",
+    "reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.mock_32768.json",
+    "reports/runs/2026-07-15_llm_0_governance_docker_smoke/MODEL_RUN_SUMMARY.ollama_gemma2_probe.json",
+    "reports/runs/2026-07-15_llm_0_governance_docker_smoke/DEFECTS.md",
+    "reports/runs/2026-07-15_llm_0_governance_docker_smoke/CHECKSUMS.sha256"
+  ],
+  "schemas": [
+    "schemas/llm/handoff.schema.json",
+    "schemas/llm/model-run-summary.schema.json",
+    "schemas/llm/paragraph-classification.schema.json",
+    "skills/journal-llm-governance/schemas/paragraph-classification.schema.json"
+  ],
+  "tests": [
+    "tests/test_llm_contracts.py"
+  ]
+}

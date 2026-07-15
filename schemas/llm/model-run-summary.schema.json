@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/journal-factory/model-run-summary.schema.json",
+  "title": "Journal Factory model run summary",
+  "type": "object",
+  "required": [
+    "status",
+    "model_name",
+    "model_supported_context",
+    "validated_operational_context",
+    "prompt_template",
+    "prompt_version",
+    "schema_version",
+    "json_valid_rate",
+    "exact_id_valid_rate",
+    "repeatability_result"
+  ],
+  "properties": {
+    "status": {
+      "enum": ["COMPLETED", "REVIEW", "BLOCKED", "FAILED"]
+    },
+    "model_name": {
+      "type": "string"
+    },
+    "model_supported_context": {
+      "type": "integer"
+    },
+    "validated_operational_context": {
+      "type": ["integer", "null"]
+    },
+    "prompt_template": {
+      "enum": ["auto_jinja", "manual_chatml"]
+    },
+    "prompt_version": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    },
+    "json_valid_rate": {
+      "type": "number"
+    },
+    "exact_id_valid_rate": {
+      "type": "number"
+    },
+    "repeatability_result": {
+      "enum": ["PASS", "FAIL", "NOT_RUN"]
+    }
+  }
+}

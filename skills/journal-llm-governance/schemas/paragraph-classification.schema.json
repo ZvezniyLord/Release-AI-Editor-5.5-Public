@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/journal-factory/paragraph-classification.schema.json",
+  "title": "Journal Factory paragraph classification response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "prompt_version", "paragraphs"],
+  "properties": {
+    "schema_version": {
+      "const": "paragraph-classification.v1"
+    },
+    "prompt_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "paragraphs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["paragraph_id", "role", "confidence", "evidence"],
+        "properties": {
+          "paragraph_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "enum": [
+              "empty",
+              "doi",
+              "udc",
+              "orcid",
+              "author",
+              "institution",
+              "author_status",
+              "title",
+              "annotation",
+              "keywords",
+              "body",
+              "table_caption",
+              "figure_caption",
+              "formula",
+              "references_heading",
+              "references_item",
+              "unknown",
+              "context_only"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "source_text_sha256": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{64}$"
+          }
+        }
+      }
+    }
+  }
+}

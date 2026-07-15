@@ -11,7 +11,8 @@
 6. /docs/MODULE_DESCRIPTIONS.md
 7. /docs/CODEX_JOURNAL_FACTORY_CYCLIC_EXECUTION_PLAN.md
 8. /docs/JOURNAL_CREATION_DECISION_PLAYBOOK.md
-9. AGENT_CONTEXT.md
+9. /docs/LOCAL_LLM_GOVERNANCE.md
+10. AGENT_CONTEXT.md
 
 Після цього можна виконувати точковий пошук по файлах замість повного сканування.
 

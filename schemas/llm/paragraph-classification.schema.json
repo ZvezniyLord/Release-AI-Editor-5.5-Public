@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/journal-factory/paragraph-classification.schema.json",
+  "title": "Journal Factory paragraph classification response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "prompt_version", "paragraphs"],
+  "properties": {
+    "schema_version": {
+      "const": "paragraph-classification.v1"
+    },
+    "prompt_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "paragraphs": {
+      "type": "array"
+    }
+  }
+}

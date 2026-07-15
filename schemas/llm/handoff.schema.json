@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/journal-factory/handoff.schema.json",
+  "title": "Journal Factory public handoff",
+  "type": "object",
+  "required": ["cycle", "base_sha", "final_commit_sha", "test_commands", "model_config_summary", "blockers"],
+  "properties": {
+    "cycle": {
+      "type": "string"
+    },
+    "base_sha": {
+      "type": "string"
+    },
+    "final_commit_sha": {
+      "type": "string"
+    },
+    "test_commands": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "model_config_summary": {
+      "type": "object"
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

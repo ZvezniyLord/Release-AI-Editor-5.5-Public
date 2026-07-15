@@ -114,3 +114,34 @@ Task 2.2 result:
 Task 2.2 stop condition:
 
 Stop for editor decision on A020. Do not start TOC. Do not start Task 2.3 style cleanup.
+
+## LLM-0 Governance + Docker Local LLM Smoke
+
+Task status: BLOCKED, not production PASS.
+
+Public code added:
+
+- Docker-first local LLM governance document and repo skill.
+- JSON Schemas for paragraph classification, model run summary, and handoff.
+- `journal_factory.llm` chunking, provider-neutral OpenAI-compatible HTTP client, host runner, schema/ID validators, synthetic fixtures, and public handoff validator.
+- Docker worker image and compose topology where source input is mounted only into `journal-worker`; `llm-runtime` receives model weights by read-only mount only.
+- Regression tests for invalid JSON, missing/extra/duplicate/reordered IDs, source hash mismatch, overflow rechunk, repeatability, and source-volume isolation.
+
+Verification:
+
+- Public pytest: PASS, 32 passed.
+- Docker worker build: PASS.
+- Worker image synthetic smoke: PASS in mock mode.
+- Local non-target Ollama probe: FAIL-CLOSED because schema contract was not satisfied.
+
+Blockers:
+
+- `CHANGESET_ARCHIVE_UNAVAILABLE`
+- `TARGET_GEMMA4_E2B_RUNTIME_NOT_AVAILABLE`
+- `GEMMA4_IMAGE_NOT_OPENAI_COMPATIBLE`
+- `OLLAMA_GEMMA2_PROBE_SCHEMA_INVALID`
+- `GITLEAKS_NOT_INSTALLED`
+
+Stop condition:
+
+Do not start A020, style cleanup, journal regeneration, or TOC.

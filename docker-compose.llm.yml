@@ -1,0 +1,44 @@
+services:
+  journal-worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.worker
+    environment:
+      LLM_BASE_URL: ${LLM_BASE_URL:?set LLM_BASE_URL}
+      LLM_MODEL: ${LLM_MODEL:?set LLM_MODEL}
+    volumes:
+      - type: bind
+        source: ${SOURCE_DIR:-./fixtures/synthetic/llm_source}
+        target: /workspace/source
+        read_only: true
+      - type: bind
+        source: ./skills
+        target: /app/skills
+        read_only: true
+    command:
+      - synthetic-smoke
+      - --context
+      - "16384"
+      - --max-output
+      - "1536"
+      - --prompt-template
+      - auto_jinja
+
+  llm-runtime:
+    image: ${LLM_RUNTIME_IMAGE:?set LLM_RUNTIME_IMAGE}
+    environment:
+      MODEL_FILE: ${MODEL_FILE:?set MODEL_FILE}
+      MODEL_CONTEXT: ${MODEL_CONTEXT:-16384}
+      MODEL_THREADS: ${MODEL_THREADS:-12}
+      MODEL_GPU_LAYERS: ${MODEL_GPU_LAYERS:-34}
+      MODEL_EVAL_BATCH: ${MODEL_EVAL_BATCH:-2048}
+      MODEL_PHYSICAL_BATCH: ${MODEL_PHYSICAL_BATCH:-512}
+      FLASH_ATTENTION: ${FLASH_ATTENTION:-1}
+      GPU_KV_CACHE: ${GPU_KV_CACHE:-1}
+    volumes:
+      - type: bind
+        source: ${MODEL_DIR:?set MODEL_DIR}
+        target: /models
+        read_only: true
+    ports:
+      - "${LLM_PORT:-8080}:8080"

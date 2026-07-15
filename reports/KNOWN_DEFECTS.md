@@ -4,6 +4,30 @@ Date: 2026-07-15
 
 ## Open
 
+### LLM-0 CHANGESET_ARCHIVE_UNAVAILABLE
+
+evidence:
+The requested `JOURNAL_FACTORY_AI_GOVERNANCE_CHANGESET.zip` was not available in the accessible workspace or checked download locations. The expected SHA-256 could not be verified.
+
+status:
+Open. The LLM-0 public integration was implemented from the prompt and recorded fail-closed.
+
+### LLM-0 TARGET_GEMMA4_E2B_RUNTIME_NOT_AVAILABLE
+
+evidence:
+The required Gemma 4 E2B OpenAI-compatible endpoint/model was not configured. A local Ollama endpoint was available but listed `qwen3.5:latest` and `gemma2:2b`, not Gemma 4 E2B.
+
+status:
+Open. No validated operational context is claimed for Gemma 4 E2B.
+
+### LLM-0 OLLAMA_GEMMA2_PROBE_SCHEMA_INVALID
+
+evidence:
+The non-target `gemma2:2b` local probe returned JSON but failed the required schema contract because `schema_version` and `prompt_version` were missing. The response was rejected.
+
+status:
+Open. Prompt/runtime tuning belongs to a later LLM cycle.
+
 ### ARTICLE_MATCH_AMBIGUOUS
 
 evidence:

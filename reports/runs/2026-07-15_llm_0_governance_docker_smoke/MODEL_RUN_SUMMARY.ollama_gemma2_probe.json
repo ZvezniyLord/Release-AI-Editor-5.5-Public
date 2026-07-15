@@ -1,0 +1,41 @@
+{
+  "concurrency": 1,
+  "deterministic_disagreement_count": 0,
+  "docker_image_digest": null,
+  "docker_image_name": null,
+  "evaluation_batch": 2048,
+  "exact_id_valid_rate": 0.0,
+  "failures": [
+    {
+      "chunk_id": "chunk-001",
+      "error": "missing top-level keys: ['prompt_version', 'schema_version']"
+    },
+    {
+      "chunk_id": "chunk-001",
+      "error": "missing top-level keys: ['prompt_version', 'schema_version']"
+    }
+  ],
+  "gpu_layers": 34,
+  "json_valid_rate": 1.0,
+  "latency_p50_ms": 35927.10015000557,
+  "latency_p95_ms": 36524.251300004835,
+  "model_file_sha256": null,
+  "model_name": "gemma2:2b",
+  "model_supported_context": 131072,
+  "peak_ram_mb": null,
+  "peak_vram_mb": null,
+  "physical_batch": 512,
+  "prompt_template": "auto_jinja",
+  "prompt_version": "journal-llm-classifier.v1",
+  "rechunk_count": 0,
+  "repeatability_result": "NOT_RUN",
+  "retry_count": 0,
+  "runtime": "ollama-openai-compatible",
+  "schema_version": "paragraph-classification.v1",
+  "seed": 42,
+  "status": "FAILED",
+  "temperature": 0.01,
+  "threads": 12,
+  "tokens_per_second": 53.98529676730284,
+  "validated_operational_context": null
+}

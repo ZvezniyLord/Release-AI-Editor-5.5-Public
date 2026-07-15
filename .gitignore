@@ -37,6 +37,11 @@ local_secrets/
 *.otf
 *.woff
 *.woff2
+*.gguf
+*.safetensors
+*.bin
+models/
+model_weights/
 *.docx
 *.dotx
 !fixtures/synthetic/toc/TOC_VERTICAL_SLICE_INPUT.docx
