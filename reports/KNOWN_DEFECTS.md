@@ -4,23 +4,41 @@ Date: 2026-07-15
 
 ## Open
 
-### Private full-journal smoke artifact not regenerated in public cycle
-
-problem:
-The existing local non-repo `JOURNAL_SMOKE_V2` artifact was created outside this public TOC vertical slice and does not show the new TOC table contract in a sanitized structural check.
+### SOURCE_TEXT_LOSS in private body smoke
 
 evidence:
-The structural-only check did not read or print private text. It found three tables in the local smoke document. The first table had three columns and seven rows, but grid widths were 3213 / 3213 / 3213 twips and central paragraph style `TABLETEXT`, not the new TOC contract 661 / 8170 / 797 twips with `Tab_SEC`, `Tab_PIP`, and `Tab_Taitl`.
+The private source-to-final audit found 1 missing token in internal article `J137-A007`.
 
 status:
-Open. Regenerate and review the private full-journal smoke in a private workspace before claiming production journal PASS. Do not commit private documents or personal data.
+Open. This is a Task 2 FAIL blocker until manually reviewed and repaired or reclassified with evidence.
 
-## Closed In This Cycle
-
-### Public TOC vertical slice table contract
+### SOURCE_OBJECT_LOSS in private body smoke
 
 evidence:
-`artifacts/toc_vertical_slice/TOC_AUDIT.json` reports PASS for the synthetic public artifact.
+The private object audit found 1 missing media hash in internal article `J137-A012`.
 
 status:
-Closed for synthetic vertical slice.
+Open. This is a Task 2 FAIL blocker until manually reviewed and repaired or reclassified with evidence.
+
+### Near-blank rendered page requires review
+
+evidence:
+The private visual audit flagged 1 near-blank rendered page in the 89-page BODY_V1 PDF.
+
+status:
+Open. Review whether it is an intentional service/tail page or a layout defect.
+
+### Manual review required before any PASS
+
+evidence:
+Task 2 generated a private DOCX/PDF review package, but the editor has not manually approved it.
+
+status:
+Open. Full journal PASS remains forbidden.
+
+## Closed Or Superseded
+
+### Previous full-journal smoke not representative of TOC contract
+
+status:
+Superseded by Task 2 body-only private smoke. TOC is intentionally not generated in this cycle.

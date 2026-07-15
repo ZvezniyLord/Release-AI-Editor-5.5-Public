@@ -55,3 +55,25 @@ verification:
 
 status:
 Done for the public synthetic vertical slice. Private full-journal smoke regeneration remains a known follow-up and is not committed.
+
+## 2026-07-15 - Journal 137 Body Before TOC
+
+problem:
+TOC was scheduled too early. The journal body must be assembled and reviewed before TOC can safely read final sections, authors, and titles.
+
+evidence:
+The Task 1 TOC vertical slice was useful as an isolated core test, but the correct workflow requires article matching, source snapshots, style validation, object fidelity, PDF render, and manual body review before TOC generation.
+
+options:
+1. Continue with TOC work immediately.
+2. Build a private body-only smoke package from source evidence and ETALON/golden controls, with TOC disabled.
+3. Commit private journal artifacts to the public mirror for review.
+
+decision:
+Choose option 2. Generate a private BODY_V1 review package without TOC and without `toc_core` changes. Commit only sanitized public reports.
+
+verification:
+Private BODY_V1 was generated and rendered to PDF/PNGs. Sanitized metrics: 20 articles, 89 rendered pages, 20 article title starts, 81 canonical style IDs, 11 used final styles, 0 foreign styles, 0 identifier losses. Private pytest passed with 29 tests and 1 warning.
+
+status:
+FAIL for review blockers: 1 source-text-loss finding, 1 source-object-loss finding, and 1 near-blank page review finding. Manual review is required. TOC remains disabled.

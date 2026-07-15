@@ -23,8 +23,13 @@ Current state:
 - TOC table output is audited fail-closed with `TOC_VISUAL_CONTRACT_INVALID`.
 - Synthetic TOC artifact audit status: PASS.
 - Full pytest status: PASS, 22 passed.
+- Task 2 private body-only journal 137 smoke was generated without TOC and without `toc_core` changes.
+- Task 2 public status: FAIL for review blockers, not PASS.
+- Task 2 private body artifact metrics: 20 articles, 89 rendered pages, 20 detected article title starts, 0 foreign styles, 0 identifier losses.
+- Task 2 blockers: 1 source-text-loss finding, 1 source-object-loss finding, 1 near-blank page review finding.
+- Private DOCX/PDF/render artifacts and private audit JSON were not committed.
 
-Next gate: regenerate a private full-journal smoke artifact with the updated TOC code before claiming production journal PASS. Do not commit private journal documents or personal data.
+Next gate: manual editor review of the private BODY_V1 DOCX/PDF and targeted repair of the source-text and source-object blockers. TOC remains disabled until the journal body is stable.
 
 ## Decision Logging Requirement
 

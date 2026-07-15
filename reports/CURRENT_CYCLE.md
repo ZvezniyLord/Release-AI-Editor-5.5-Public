@@ -2,44 +2,40 @@
 
 Date: 2026-07-15
 
-Cycle: Task 1 - TOC vertical slice
+Cycle: Task 2 - journal 137 body-only private smoke
 
 Scope:
 
-- TOC parser behavior.
-- TOC Word table contract.
-- Fail-closed TOC audit.
-- Synthetic-only fixtures and visible artifacts.
-- Cycle reports.
+- Build and audit the private body of journal 137.
+- Do not generate or insert TOC.
+- Do not change `toc_core`.
+- Do not commit private DOCX, PDF, source article text, author names, ORCID values, or local paths.
 
-Out of scope and unchanged:
+Execution:
 
-- LLM behavior.
-- Article processing.
-- Frontmatter.
-- Full journal pipeline.
-- Private DOCX/PDF/ZIP inputs and outputs.
+- Private archive/application workspace was used for source evidence.
+- Approved ETALON and approved golden journal were used as private controls.
+- BODY_V1 was created in the private workspace by removing the TOC table from the approved golden journal and inserting the temporary marker `TOC NOT GENERATED IN THIS CYCLE`.
+- Source snapshots, article manifest, style registry, style audit, fidelity audit, object audit, identifier audit, text diff audit, PDF render, page PNG render, and contact sheet were generated privately.
+- LLM did not edit DOCX and was not used for deterministic changes.
 
-Implemented:
+Sanitized results:
 
-- `SECTION` maps to level 1.
-- `AUTOR` maps to level 2.
-- `Назва1` maps to level 3.
-- Generic Word `Title` / `Title1` does not create journal sections.
-- Service pages before the first valid section are ignored.
-- Title without author and author without title raise `TOC_INPUT_INVALID`.
-- Silent `Без секції` fallback was removed.
-- TOC table contract now requires three columns and fixed widths 661 / 8170 / 797 twips.
-- Article rows contain only two central paragraphs: `Tab_PIP` authors and `Tab_Taitl` title.
-- Synthetic audit fails closed with `TOC_VISUAL_CONTRACT_INVALID`.
-
-Verification:
-
-- `python -m pytest`: PASS, 22 passed.
-- `artifacts/toc_vertical_slice/TOC_AUDIT.json`: PASS.
-- `artifacts/toc_vertical_slice/contact_sheet.png`: visually inspected.
-- Local private `JOURNAL_SMOKE_V2` structural check was sanitized and did not read or report private text.
+- Status: FAIL for review blockers.
+- Articles: 20.
+- Rendered pages: 89.
+- Rendered page PNGs: 89.
+- Article title starts detected: 20.
+- Manifest free-listener rows excluded from articles: 7.
+- Canonical style registry unique IDs: 81.
+- Used final styles: 11.
+- Foreign style count: 0.
+- Direct formatting warnings: 207.
+- Text loss count: 1.
+- Object loss count: 1.
+- Identifier loss count: 0.
+- Near-blank page review count: 1.
 
 Status:
 
-Public synthetic TOC vertical slice is complete. Private full-journal smoke regeneration remains a follow-up gate.
+Stop for manual review. Do not start TOC. Do not continue architecture work.
