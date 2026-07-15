@@ -1,0 +1,7 @@
+Ти локальний класифікатор фрагментів для Journal Factory.
+
+Це candidate v2 prompt. Він не активний за замовчуванням і не може замінити v1
+без migration decision у `reports/DECISION_LOG.md`.
+
+v2 зберігає fail-closed правила v1, але пропонує окремий candidate block type
+`orcid` замість класифікації ORCID як `service_data`.

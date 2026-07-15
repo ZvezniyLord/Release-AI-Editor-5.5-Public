@@ -6,6 +6,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from jsonschema import Draft202012Validator
+from jsonschema.exceptions import ValidationError
+
 
 class ModelResponseError(ValueError):
     """Model output is not acceptable for deterministic post-processing."""
@@ -19,47 +22,106 @@ class IDContractError(ModelResponseError):
     """Model output did not exactly preserve expected paragraph IDs."""
 
 
-ALLOWED_ROLES = {
-    "empty",
+class ModelStateDisagreementError(ModelResponseError):
+    """Model state_update disagrees with deterministic worker state."""
+
+
+FORBIDDEN_RESPONSE_KEYS = {"original_text", "text", "block_id"}
+
+V1_BLOCK_TYPES = {
+    "section",
     "doi",
     "udc",
-    "orcid",
+    "empty_paragraph",
     "author",
-    "institution",
     "author_status",
+    "affiliation",
+    "city_country",
     "title",
     "annotation",
     "keywords",
-    "body",
+    "main_text",
     "table_caption",
     "figure_caption",
     "formula",
     "references_heading",
     "references_item",
+    "service_data",
     "unknown",
-    "context_only",
+}
+
+STATE_KEYS = {
+    "section_found",
+    "doi_found",
+    "udc_found",
+    "authors_found",
+    "author_status_found",
+    "affiliation_found",
+    "city_country_found",
+    "title_found",
+    "annotation_found",
+    "keywords_found",
+    "body_started",
+    "references_started",
+    "references_finished",
+    "service_data_found",
+}
+
+BLOCK_TO_STATE = {
+    "section": "section_found",
+    "doi": "doi_found",
+    "udc": "udc_found",
+    "author": "authors_found",
+    "author_status": "author_status_found",
+    "affiliation": "affiliation_found",
+    "city_country": "city_country_found",
+    "title": "title_found",
+    "annotation": "annotation_found",
+    "keywords": "keywords_found",
+    "main_text": "body_started",
+    "table_caption": "body_started",
+    "figure_caption": "body_started",
+    "formula": "body_started",
+    "references_heading": "references_started",
+    "references_item": "references_started",
+    "service_data": "service_data_found",
 }
 
 
 @dataclass(frozen=True)
 class Classification:
-    paragraph_id: str
-    role: str
+    block_type: str
+    paragraph_ids: tuple[str, ...]
     confidence: float
-    evidence: str
+    evidence: tuple[str, ...]
 
 
 def repo_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
-def skill_schema_path(root: Path | None = None) -> Path:
-    base = root or repo_root()
-    return base / "skills" / "journal-llm-governance" / "schemas" / "paragraph-classification.schema.json"
+def journal_builder_root(root: Path | None = None) -> Path:
+    return (root or repo_root()) / "skills" / "journal_builder"
 
 
-def load_skill_schema(root: Path | None = None) -> dict[str, Any]:
-    return json.loads(skill_schema_path(root).read_text(encoding="utf-8"))
+def skill_schema_path(
+    root: Path | None = None,
+    *,
+    version: str = "v1",
+    schema_name: str = "paragraph_classifier_output",
+) -> Path:
+    return journal_builder_root(root) / "schemas" / f"{schema_name}.{version}.schema.json"
+
+
+def load_skill_schema(
+    root: Path | None = None,
+    *,
+    version: str = "v1",
+    schema_name: str = "paragraph_classifier_output",
+) -> dict[str, Any]:
+    return json.loads(
+        skill_schema_path(root, version=version, schema_name=schema_name).read_text(encoding="utf-8")
+    )
 
 
 def stable_text_sha256(text: str) -> str:
@@ -76,51 +138,61 @@ def parse_strict_json(text: str) -> dict[str, Any]:
     return payload
 
 
+def _json_path(path: tuple[Any, ...]) -> str:
+    if not path:
+        return "$"
+    rendered = "$"
+    for item in path:
+        if isinstance(item, int):
+            rendered += f"[{item}]"
+        else:
+            rendered += f".{item}"
+    return rendered
+
+
 def validate_schema(payload: dict[str, Any], schema: dict[str, Any] | None = None) -> None:
-    """Small local validator for the schema committed with this repo.
-
-    This avoids a runtime dependency while still using the versioned JSON
-    Schema as the public contract source.
-    """
-
-    required_top = {"schema_version", "prompt_version", "paragraphs"}
-    missing_top = required_top - set(payload)
-    if missing_top:
-        raise SchemaValidationError(f"missing top-level keys: {sorted(missing_top)}")
-    if not isinstance(payload["schema_version"], str) or not payload["schema_version"]:
-        raise SchemaValidationError("schema_version must be a non-empty string")
-    if payload["schema_version"] != "paragraph-classification.v1":
-        raise SchemaValidationError("unsupported schema_version")
-    if not isinstance(payload["prompt_version"], str) or not payload["prompt_version"]:
-        raise SchemaValidationError("prompt_version must be a non-empty string")
-    paragraphs = payload["paragraphs"]
-    if not isinstance(paragraphs, list):
-        raise SchemaValidationError("paragraphs must be a list")
-    for index, item in enumerate(paragraphs):
-        if not isinstance(item, dict):
-            raise SchemaValidationError(f"paragraphs[{index}] must be an object")
-        required = {"paragraph_id", "role", "confidence", "evidence"}
-        missing = required - set(item)
-        if missing:
-            raise SchemaValidationError(f"paragraphs[{index}] missing keys: {sorted(missing)}")
-        if not isinstance(item["paragraph_id"], str) or not item["paragraph_id"]:
-            raise SchemaValidationError(f"paragraphs[{index}].paragraph_id must be non-empty string")
-        if item["role"] not in ALLOWED_ROLES:
-            raise SchemaValidationError(f"paragraphs[{index}].role is not allowed: {item['role']}")
-        confidence = item["confidence"]
-        if not isinstance(confidence, (int, float)) or confidence < 0 or confidence > 1:
-            raise SchemaValidationError(f"paragraphs[{index}].confidence must be between 0 and 1")
-        if not isinstance(item["evidence"], str):
-            raise SchemaValidationError(f"paragraphs[{index}].evidence must be a string")
-        if "source_text_sha256" in item and not isinstance(item["source_text_sha256"], str):
-            raise SchemaValidationError(f"paragraphs[{index}].source_text_sha256 must be a string")
+    active_schema = schema or load_skill_schema()
+    validator = Draft202012Validator(active_schema)
+    errors = sorted(validator.iter_errors(payload), key=lambda err: list(err.path))
+    if errors:
+        first = errors[0]
+        raise SchemaValidationError(f"{_json_path(tuple(first.path))}: {first.message}") from first
 
 
-def validate_exact_id_contract(payload: dict[str, Any], expected_ids: list[str]) -> None:
-    actual_ids = [item["paragraph_id"] for item in payload.get("paragraphs", [])]
+def reject_forbidden_response_keys(value: Any, path: tuple[Any, ...] = ()) -> None:
+    if isinstance(value, dict):
+        for key, child in value.items():
+            if key in FORBIDDEN_RESPONSE_KEYS:
+                raise SchemaValidationError(f"{_json_path(path + (key,))}: forbidden response key")
+            reject_forbidden_response_keys(child, path + (key,))
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            reject_forbidden_response_keys(child, path + (index,))
+
+
+def _flatten_block_ids(payload: dict[str, Any]) -> list[str]:
+    ids: list[str] = []
+    for block in payload.get("blocks", []):
+        ids.extend(block.get("paragraph_ids", []))
+    return ids
+
+
+def validate_exact_id_contract(
+    payload: dict[str, Any],
+    expected_ids: list[str],
+    *,
+    context_only_ids: list[str] | None = None,
+) -> None:
+    actual_ids = _flatten_block_ids(payload)
+    context_ids = set(context_only_ids or [])
+    leaked_context = [pid for pid in actual_ids if pid in context_ids]
+    if leaked_context:
+        raise IDContractError(f"context-only paragraph IDs returned: {leaked_context}")
+
     duplicates = sorted({pid for pid in actual_ids if actual_ids.count(pid) > 1})
     if duplicates:
         raise IDContractError(f"duplicate paragraph IDs: {duplicates}")
+
     missing = [pid for pid in expected_ids if pid not in actual_ids]
     extra = [pid for pid in actual_ids if pid not in expected_ids]
     if missing or extra:
@@ -129,33 +201,66 @@ def validate_exact_id_contract(payload: dict[str, Any], expected_ids: list[str])
         raise IDContractError("paragraph IDs were reordered")
 
 
-def validate_source_hashes(payload: dict[str, Any], source_hashes: dict[str, str]) -> None:
-    for item in payload.get("paragraphs", []):
-        expected_hash = source_hashes.get(item["paragraph_id"])
-        reported_hash = item.get("source_text_sha256")
-        if expected_hash and reported_hash and expected_hash != reported_hash:
-            raise IDContractError(f"source text hash changed for {item['paragraph_id']}")
+def deterministic_state_transition(
+    input_state: dict[str, bool] | None,
+    blocks: list[dict[str, Any]],
+) -> dict[str, bool]:
+    state = {key: bool((input_state or {}).get(key, False)) for key in STATE_KEYS}
+    for block in blocks:
+        state_key = BLOCK_TO_STATE.get(block.get("block_type"))
+        if state_key:
+            state[state_key] = True
+        if block.get("block_type") == "references_item":
+            state["references_started"] = True
+    return state
+
+
+def validate_model_state_update(
+    payload: dict[str, Any],
+    *,
+    input_state: dict[str, bool] | None = None,
+) -> dict[str, bool]:
+    deterministic = deterministic_state_transition(input_state, payload.get("blocks", []))
+    model_update = payload.get("state_update", {})
+    disagreements: dict[str, dict[str, bool]] = {}
+    for key, model_value in model_update.items():
+        if key in deterministic and bool(model_value) != bool(deterministic[key]):
+            disagreements[key] = {
+                "model": bool(model_value),
+                "deterministic": bool(deterministic[key]),
+            }
+    if disagreements:
+        raise ModelStateDisagreementError(f"MODEL_STATE_DISAGREEMENT: {disagreements}")
+    return deterministic
+
+
+def validate_source_hash(payload: dict[str, Any], expected_source_hash: str | None = None) -> None:
+    if expected_source_hash and payload.get("source_hash") != expected_source_hash:
+        raise IDContractError("source_hash changed or did not match request")
 
 
 def validate_model_payload(
     payload: dict[str, Any],
     *,
     expected_ids: list[str],
-    source_hashes: dict[str, str] | None = None,
+    context_only_ids: list[str] | None = None,
+    expected_source_hash: str | None = None,
+    input_state: dict[str, bool] | None = None,
     schema: dict[str, Any] | None = None,
 ) -> list[Classification]:
+    reject_forbidden_response_keys(payload)
     validate_schema(payload, schema=schema)
-    validate_exact_id_contract(payload, expected_ids)
-    if source_hashes:
-        validate_source_hashes(payload, source_hashes)
+    validate_exact_id_contract(payload, expected_ids, context_only_ids=context_only_ids)
+    validate_source_hash(payload, expected_source_hash)
+    validate_model_state_update(payload, input_state=input_state)
     return [
         Classification(
-            paragraph_id=item["paragraph_id"],
-            role=item["role"],
-            confidence=float(item["confidence"]),
-            evidence=item["evidence"],
+            block_type=block["block_type"],
+            paragraph_ids=tuple(block["paragraph_ids"]),
+            confidence=float(block["confidence"]),
+            evidence=tuple(block["evidence"]),
         )
-        for item in payload["paragraphs"]
+        for block in payload["blocks"]
     ]
 
 
@@ -163,13 +268,17 @@ def validate_model_text(
     text: str,
     *,
     expected_ids: list[str],
-    source_hashes: dict[str, str] | None = None,
+    context_only_ids: list[str] | None = None,
+    expected_source_hash: str | None = None,
+    input_state: dict[str, bool] | None = None,
     schema: dict[str, Any] | None = None,
 ) -> list[Classification]:
     payload = parse_strict_json(text)
     return validate_model_payload(
         payload,
         expected_ids=expected_ids,
-        source_hashes=source_hashes,
+        context_only_ids=context_only_ids,
+        expected_source_hash=expected_source_hash,
+        input_state=input_state,
         schema=schema,
     )

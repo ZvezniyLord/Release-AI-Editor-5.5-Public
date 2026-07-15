@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/journal-factory/paragraph_classifier_output.v1.schema.json",
+  "title": "Journal Factory paragraph classifier output v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["article_id", "source_hash", "model", "prompt_version", "fragment_status", "state_update", "blocks", "problems", "next_action"],
+  "properties": {
+    "article_id": {"type": "string", "minLength": 1},
+    "source_hash": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+    "model": {"type": "string", "minLength": 1},
+    "prompt_version": {"const": "paragraph-classifier-v1"},
+    "fragment_status": {"enum": ["accepted", "needs_operator_review", "blocked"]},
+    "state_update": {"$ref": "#/$defs/state_update"},
+    "blocks": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/block"}
+    },
+    "problems": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/problem"}
+    },
+    "next_action": {"enum": ["continue", "manual_review", "stop_document"]}
+  },
+  "$defs": {
+    "block_type": {
+      "enum": [
+        "section",
+        "doi",
+        "udc",
+        "empty_paragraph",
+        "author",
+        "author_status",
+        "affiliation",
+        "city_country",
+        "title",
+        "annotation",
+        "keywords",
+        "main_text",
+        "table_caption",
+        "figure_caption",
+        "formula",
+        "references_heading",
+        "references_item",
+        "service_data",
+        "unknown"
+      ]
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["block_type", "paragraph_ids", "confidence", "evidence"],
+      "properties": {
+        "block_type": {"$ref": "#/$defs/block_type"},
+        "paragraph_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "text_excerpt": {"type": "string", "maxLength": 240},
+        "evidence": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "problem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "severity", "paragraph_ids", "evidence"],
+      "properties": {
+        "code": {"type": "string", "minLength": 1},
+        "severity": {"enum": ["review", "fail"]},
+        "paragraph_ids": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        },
+        "text_excerpt": {"type": "string", "maxLength": 240},
+        "evidence": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "state_update": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "section_found": {"type": "boolean"},
+        "doi_found": {"type": "boolean"},
+        "udc_found": {"type": "boolean"},
+        "authors_found": {"type": "boolean"},
+        "author_status_found": {"type": "boolean"},
+        "affiliation_found": {"type": "boolean"},
+        "city_country_found": {"type": "boolean"},
+        "title_found": {"type": "boolean"},
+        "annotation_found": {"type": "boolean"},
+        "keywords_found": {"type": "boolean"},
+        "body_started": {"type": "boolean"},
+        "references_started": {"type": "boolean"},
+        "references_finished": {"type": "boolean"},
+        "service_data_found": {"type": "boolean"}
+      }
+    }
+  }
+}

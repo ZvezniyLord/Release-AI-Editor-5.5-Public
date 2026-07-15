@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/journal-factory/paragraph_classifier_output.v2.schema.json",
+  "title": "Journal Factory paragraph classifier output v2 candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["article_id", "source_hash", "model", "prompt_version", "fragment_status", "state_update", "blocks", "problems", "next_action"],
+  "properties": {
+    "article_id": {"type": "string", "minLength": 1},
+    "source_hash": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+    "model": {"type": "string", "minLength": 1},
+    "prompt_version": {"const": "paragraph-classifier-v2-candidate"},
+    "fragment_status": {"enum": ["accepted", "needs_operator_review", "blocked"]},
+    "state_update": {"type": "object", "additionalProperties": {"type": "boolean"}},
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["block_type", "paragraph_ids", "confidence", "evidence"],
+        "properties": {
+          "block_type": {
+            "enum": [
+              "section",
+              "doi",
+              "udc",
+              "empty_paragraph",
+              "author",
+              "author_status",
+              "affiliation",
+              "city_country",
+              "title",
+              "annotation",
+              "keywords",
+              "main_text",
+              "table_caption",
+              "figure_caption",
+              "formula",
+              "references_heading",
+              "references_item",
+              "service_data",
+              "orcid",
+              "unknown"
+            ]
+          },
+          "paragraph_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "text_excerpt": {"type": "string", "maxLength": 240},
+          "evidence": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "problems": {"type": "array"},
+    "next_action": {"enum": ["continue", "manual_review", "stop_document"]}
+  }
+}

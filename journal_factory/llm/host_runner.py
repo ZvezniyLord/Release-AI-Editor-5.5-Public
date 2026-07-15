@@ -15,11 +15,10 @@ from .contracts import (
     ModelResponseError,
     load_skill_schema,
     parse_strict_json,
-    stable_text_sha256,
     validate_model_payload,
 )
 from .public_handoff import validate_public_handoff_file
-from .synthetic import expected_payload, synthetic_paragraphs
+from .synthetic import SOURCE_HASH, expected_payload, synthetic_paragraphs
 from .templates import PROMPT_VERSION, render_messages
 
 
@@ -64,7 +63,6 @@ def run_synthetic_smoke(client: ChatClient, config: SmokeConfig, *, repo: Path |
         max_output_tokens=config.max_output,
         overflow_policy="rechunk",
     )
-    source_hashes = {paragraph.paragraph_id: stable_text_sha256(paragraph.text) for paragraph in paragraphs}
     total = 0
     json_valid = 0
     id_valid = 0
@@ -93,15 +91,17 @@ def run_synthetic_smoke(client: ChatClient, config: SmokeConfig, *, repo: Path |
             latencies.append(result.latency_ms)
             if result.total_tokens:
                 tokens_per_second.append(result.total_tokens / elapsed)
-            expected_ids = chunk.paragraph_ids
-            chunk_hashes = {pid: source_hashes[pid] for pid in expected_ids}
+            decision_ids = [paragraph.paragraph_id for paragraph in chunk.paragraphs if not paragraph.context_only]
+            context_only_ids = [paragraph.paragraph_id for paragraph in chunk.paragraphs if paragraph.context_only]
             try:
                 payload = parse_strict_json(result.content)
                 json_valid += 1
                 validate_model_payload(
                     payload,
-                    expected_ids=expected_ids,
-                    source_hashes=chunk_hashes,
+                    expected_ids=decision_ids,
+                    context_only_ids=context_only_ids,
+                    expected_source_hash=SOURCE_HASH,
+                    input_state={},
                     schema=schema,
                 )
                 id_valid += 1
@@ -133,7 +133,7 @@ def run_synthetic_smoke(client: ChatClient, config: SmokeConfig, *, repo: Path |
         "concurrency": config.concurrency,
         "prompt_template": config.prompt_template,
         "prompt_version": PROMPT_VERSION,
-        "schema_version": "paragraph-classification.v1",
+        "schema_version": "paragraph_classifier_output.v1",
         "temperature": config.temperature,
         "seed": config.seed,
         "json_valid_rate": json_valid / total if total else 0.0,

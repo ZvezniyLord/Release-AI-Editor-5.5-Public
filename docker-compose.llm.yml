@@ -23,6 +23,8 @@ services:
       - "1536"
       - --prompt-template
       - auto_jinja
+    networks:
+      - journal-llm-internal
 
   llm-runtime:
     image: ${LLM_RUNTIME_IMAGE:?set LLM_RUNTIME_IMAGE}
@@ -40,5 +42,34 @@ services:
         source: ${MODEL_DIR:?set MODEL_DIR}
         target: /models
         read_only: true
+    expose:
+      - "8080"
+    networks:
+      - journal-llm-internal
+
+  llm-runtime-debug:
+    profiles:
+      - debug
+    image: ${LLM_RUNTIME_IMAGE:?set LLM_RUNTIME_IMAGE}
+    environment:
+      MODEL_FILE: ${MODEL_FILE:?set MODEL_FILE}
+      MODEL_CONTEXT: ${MODEL_CONTEXT:-16384}
+      MODEL_THREADS: ${MODEL_THREADS:-12}
+      MODEL_GPU_LAYERS: ${MODEL_GPU_LAYERS:-34}
+      MODEL_EVAL_BATCH: ${MODEL_EVAL_BATCH:-2048}
+      MODEL_PHYSICAL_BATCH: ${MODEL_PHYSICAL_BATCH:-512}
+      FLASH_ATTENTION: ${FLASH_ATTENTION:-1}
+      GPU_KV_CACHE: ${GPU_KV_CACHE:-1}
+    volumes:
+      - type: bind
+        source: ${MODEL_DIR:?set MODEL_DIR}
+        target: /models
+        read_only: true
     ports:
-      - "${LLM_PORT:-8080}:8080"
+      - "127.0.0.1:${LLM_PORT:-8080}:8080"
+    networks:
+      - journal-llm-internal
+
+networks:
+  journal-llm-internal:
+    internal: true

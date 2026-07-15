@@ -1,20 +1,16 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.invalid/journal-factory/paragraph-classification.schema.json",
-  "title": "Journal Factory paragraph classification response",
+  "title": "Compatibility pointer for Journal Factory paragraph classifier output",
+  "$comment": "Authoritative v1 schema lives at skills/journal_builder/schemas/paragraph_classifier_output.v1.schema.json. The active contract uses fragment_status, state_update, blocks, problems, and next_action, not the retired paragraphs wrapper.",
   "type": "object",
-  "additionalProperties": false,
-  "required": ["schema_version", "prompt_version", "paragraphs"],
+  "additionalProperties": true,
+  "required": ["fragment_status", "state_update", "blocks", "problems", "next_action"],
   "properties": {
-    "schema_version": {
-      "const": "paragraph-classification.v1"
-    },
-    "prompt_version": {
-      "type": "string",
-      "minLength": 1
-    },
-    "paragraphs": {
-      "type": "array"
-    }
+    "fragment_status": {},
+    "state_update": {},
+    "blocks": {},
+    "problems": {},
+    "next_action": {}
   }
 }

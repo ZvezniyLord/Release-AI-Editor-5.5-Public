@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/journal-factory/paragraph_classifier_input.v1.schema.json",
+  "title": "Journal Factory paragraph classifier input v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "article_id", "source_hash", "language", "state", "paragraphs"],
+  "properties": {
+    "contract_version": {"const": "paragraph_classifier_input.v1"},
+    "article_id": {"type": "string", "minLength": 1},
+    "source_hash": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+    "language": {"type": "string", "minLength": 2},
+    "state": {"$ref": "#/$defs/state"},
+    "paragraphs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["paragraph_id", "text", "context_only"],
+        "properties": {
+          "paragraph_id": {"type": "string", "minLength": 1},
+          "text": {"type": "string"},
+          "style_id": {"type": ["string", "null"]},
+          "context_only": {"type": "boolean"}
+        }
+      }
+    },
+    "deterministic_markers": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "state": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "section_found": {"type": "boolean"},
+        "doi_found": {"type": "boolean"},
+        "udc_found": {"type": "boolean"},
+        "authors_found": {"type": "boolean"},
+        "author_status_found": {"type": "boolean"},
+        "affiliation_found": {"type": "boolean"},
+        "city_country_found": {"type": "boolean"},
+        "title_found": {"type": "boolean"},
+        "annotation_found": {"type": "boolean"},
+        "keywords_found": {"type": "boolean"},
+        "body_started": {"type": "boolean"},
+        "references_started": {"type": "boolean"},
+        "references_finished": {"type": "boolean"},
+        "service_data_found": {"type": "boolean"}
+      }
+    }
+  }
+}
