@@ -204,6 +204,7 @@ def command_real_benchmark(args: argparse.Namespace) -> int:
         gpu_layers=args.gpu_layers,
         concurrency=args.concurrency,
         prompt_templates=prompt_templates,
+        prompt_version=args.prompt_version,
         response_format=args.response_format,
         repeat_count=args.repeat_count,
         real_model=not args.mock,
@@ -277,6 +278,7 @@ def build_parser() -> argparse.ArgumentParser:
     benchmark.add_argument("--gpu-layers", type=int, default=34)
     benchmark.add_argument("--concurrency", type=int, default=1)
     benchmark.add_argument("--prompt-templates", default="auto_jinja,manual_chatml")
+    benchmark.add_argument("--prompt-version", default="v1")
     benchmark.add_argument(
         "--response-format",
         choices=["json_schema", "json_object", "none"],

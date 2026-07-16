@@ -1,0 +1,565 @@
+{
+  "aggregate_by_prompt_runtime": [
+    {
+      "context_only_id_failures": 0,
+      "duplicate_id_failures": 3,
+      "forbidden_field_failures": 0,
+      "id_contract_failures": 3,
+      "json_failures": 0,
+      "latency_p50_ms": 13696.41729999421,
+      "latency_p95_ms": 15934.28270000004,
+      "latency_total_ms": 43297.363099991344,
+      "missing_id_failures": 0,
+      "model_identifier": "google/gemma-4-e2b",
+      "prompt_version": "v1",
+      "runtime": "lmstudio-openai-compatible",
+      "schema_failures": 0,
+      "semantic_exact_rate": 0.9629629629629629,
+      "state_failures": 3,
+      "status": "FAILED",
+      "tokens_per_second": 236.91992541386952,
+      "transport_failures": 0,
+      "valid_output_rate": 0.0
+    },
+    {
+      "context_only_id_failures": 0,
+      "duplicate_id_failures": 0,
+      "forbidden_field_failures": 0,
+      "id_contract_failures": 3,
+      "json_failures": 0,
+      "latency_p50_ms": 13864.76290000428,
+      "latency_p95_ms": 13989.043100002164,
+      "latency_total_ms": 41334.835700006806,
+      "missing_id_failures": 3,
+      "model_identifier": "google/gemma-4-e2b",
+      "prompt_version": "v1.1",
+      "runtime": "lmstudio-openai-compatible",
+      "schema_failures": 0,
+      "semantic_exact_rate": 0.9444444444444444,
+      "state_failures": 0,
+      "status": "FAILED",
+      "tokens_per_second": 295.75592268801927,
+      "transport_failures": 0,
+      "valid_output_rate": 0.0
+    },
+    {
+      "context_only_id_failures": 0,
+      "duplicate_id_failures": 0,
+      "forbidden_field_failures": 0,
+      "id_contract_failures": 3,
+      "json_failures": 0,
+      "latency_p50_ms": 17247.359200002393,
+      "latency_p95_ms": 17792.337400001998,
+      "latency_total_ms": 52175.47420000483,
+      "missing_id_failures": 3,
+      "model_identifier": "gemma4:e2b",
+      "prompt_version": "v1",
+      "runtime": "ollama-openai-compatible",
+      "schema_failures": 0,
+      "semantic_exact_rate": 0.9444444444444444,
+      "state_failures": 3,
+      "status": "FAILED",
+      "tokens_per_second": 192.498410139473,
+      "transport_failures": 0,
+      "valid_output_rate": 0.0
+    },
+    {
+      "context_only_id_failures": 0,
+      "duplicate_id_failures": 0,
+      "forbidden_field_failures": 0,
+      "id_contract_failures": 0,
+      "json_failures": 0,
+      "latency_p50_ms": 19088.15869999671,
+      "latency_p95_ms": 19122.91120000009,
+      "latency_total_ms": 57264.94709999679,
+      "missing_id_failures": 0,
+      "model_identifier": "gemma4:e2b",
+      "prompt_version": "v1.1",
+      "runtime": "ollama-openai-compatible",
+      "schema_failures": 0,
+      "semantic_exact_rate": 0.8888888888888888,
+      "state_failures": 0,
+      "status": "COMPLETED",
+      "tokens_per_second": 216.2582358927657,
+      "transport_failures": 0,
+      "valid_output_rate": 1.0
+    }
+  ],
+  "base_branch": "agent/llm-0-2-real-gemma-benchmark",
+  "base_sha": "cdd1132059365a7abaaab69682b9f4fb0e339d22",
+  "closed_defects": [
+    "LMSTUDIO_CONTEXT_ONLY_ID_RETURNED",
+    "OLLAMA_EMPTY_PARAGRAPH_ID_MISSING",
+    "MODEL_STATE_DISAGREEMENT for candidate v1.1 on both measured runtimes"
+  ],
+  "combinations": [
+    {
+      "aggregate_metrics": {
+        "context_only_id_failures": 0,
+        "duplicate_id_failures": 3,
+        "forbidden_field_failures": 0,
+        "id_contract_failures": 3,
+        "json_failures": 0,
+        "latency_p50_ms": 13696.41729999421,
+        "latency_p95_ms": 15934.28270000004,
+        "latency_total_ms": 43297.363099991344,
+        "missing_id_failures": 0,
+        "schema_failures": 0,
+        "semantic_exact_rate": 0.9629629629629629,
+        "state_failures": 3,
+        "tokens_per_second": 236.91992541386952,
+        "transport_failures": 0,
+        "valid_output_rate": 0.0
+      },
+      "endpoint": "http://127.0.0.1:1234",
+      "generated_request_schema_strategy": "source_id_enum_for_blocks_and_problems",
+      "inference_parameters": {
+        "concurrency": 1,
+        "context": 16384,
+        "generated_request_schema_strategy": "source_id_enum_for_blocks_and_problems",
+        "gpu_layers": 34,
+        "max_output": 2048,
+        "model_supported_context": 131072,
+        "prompt_skill_version": "v1",
+        "prompt_templates": [
+          "auto_jinja"
+        ],
+        "repeat_count": 3,
+        "response_format": "json_schema",
+        "seed": 42,
+        "temperature": 0.01,
+        "threads": 12
+      },
+      "model_digest_or_hash": "6febf73c7c6b44c550ba857ceca3788262ce2272603ca16b1f2609556205dea3",
+      "model_identifier": "google/gemma-4-e2b",
+      "prompt_sha256": "0f50b93ba8e00e630d3d0b6a211fb57e5191e830c94e9e9ab06310c1d5baaf9b",
+      "prompt_version": "v1",
+      "runs": [
+        {
+          "context_only_id_valid": true,
+          "errors": [
+            {
+              "code": "DUPLICATE_ID",
+              "message": "duplicate paragraph IDs: ['P017']"
+            },
+            {
+              "code": "MODEL_STATE_DISAGREEMENT",
+              "message": "MODEL_STATE_DISAGREEMENT: {'author_status_found': {'model': False, 'deterministic': True}, 'affiliation_found': {'model': False, 'deterministic': True}, 'body_started': {'model': False, 'deterministic': True}, 'references_started': {'model': False, 'deterministic': True}}"
+            }
+          ],
+          "id_contract_valid": false,
+          "json_valid": true,
+          "latency_ms": 15934.28270000004,
+          "prompt_template": "auto_jinja",
+          "repeat": 1,
+          "schema_valid": true,
+          "semantic_exact_rate": 1.0,
+          "state_valid": false,
+          "tokens_per_second": 218.2713312216693,
+          "valid_output": false
+        },
+        {
+          "context_only_id_valid": true,
+          "errors": [
+            {
+              "code": "DUPLICATE_ID",
+              "message": "duplicate paragraph IDs: ['P017']"
+            },
+            {
+              "code": "MODEL_STATE_DISAGREEMENT",
+              "message": "MODEL_STATE_DISAGREEMENT: {'author_status_found': {'model': False, 'deterministic': True}}"
+            }
+          ],
+          "id_contract_valid": false,
+          "json_valid": true,
+          "latency_ms": 13696.41729999421,
+          "prompt_template": "auto_jinja",
+          "repeat": 2,
+          "schema_valid": true,
+          "semantic_exact_rate": 0.9444444444444444,
+          "state_valid": false,
+          "tokens_per_second": 245.97642726634177,
+          "valid_output": false
+        },
+        {
+          "context_only_id_valid": true,
+          "errors": [
+            {
+              "code": "DUPLICATE_ID",
+              "message": "duplicate paragraph IDs: ['P017']"
+            },
+            {
+              "code": "MODEL_STATE_DISAGREEMENT",
+              "message": "MODEL_STATE_DISAGREEMENT: {'author_status_found': {'model': False, 'deterministic': True}}"
+            }
+          ],
+          "id_contract_valid": false,
+          "json_valid": true,
+          "latency_ms": 13666.663099997095,
+          "prompt_template": "auto_jinja",
+          "repeat": 3,
+          "schema_valid": true,
+          "semantic_exact_rate": 0.9444444444444444,
+          "state_valid": false,
+          "tokens_per_second": 246.51201775359752,
+          "valid_output": false
+        }
+      ],
+      "runtime": "lmstudio-openai-compatible",
+      "source_report": "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/lmstudio_v1.json",
+      "status": "FAILED",
+      "stored_schema_sha256": "c7fa809f98bdd1775e58f94f513eb29f761d6b651f029cc988251f949ada665e"
+    },
+    {
+      "aggregate_metrics": {
+        "context_only_id_failures": 0,
+        "duplicate_id_failures": 0,
+        "forbidden_field_failures": 0,
+        "id_contract_failures": 3,
+        "json_failures": 0,
+        "latency_p50_ms": 13864.76290000428,
+        "latency_p95_ms": 13989.043100002164,
+        "latency_total_ms": 41334.835700006806,
+        "missing_id_failures": 3,
+        "schema_failures": 0,
+        "semantic_exact_rate": 0.9444444444444444,
+        "state_failures": 0,
+        "tokens_per_second": 295.75592268801927,
+        "transport_failures": 0,
+        "valid_output_rate": 0.0
+      },
+      "endpoint": "http://127.0.0.1:1234",
+      "generated_request_schema_strategy": "source_id_enum_for_blocks_and_problems",
+      "inference_parameters": {
+        "concurrency": 1,
+        "context": 16384,
+        "generated_request_schema_strategy": "source_id_enum_for_blocks_and_problems",
+        "gpu_layers": 34,
+        "max_output": 2048,
+        "model_supported_context": 131072,
+        "prompt_skill_version": "v1.1",
+        "prompt_templates": [
+          "auto_jinja"
+        ],
+        "repeat_count": 3,
+        "response_format": "json_schema",
+        "seed": 42,
+        "temperature": 0.01,
+        "threads": 12
+      },
+      "model_digest_or_hash": "6febf73c7c6b44c550ba857ceca3788262ce2272603ca16b1f2609556205dea3",
+      "model_identifier": "google/gemma-4-e2b",
+      "prompt_sha256": "d7d816fe7bb63516ca781fb611638e6d255e93be9ab5bf2b845c619756c7a4c8",
+      "prompt_version": "v1.1",
+      "runs": [
+        {
+          "context_only_id_valid": true,
+          "errors": [
+            {
+              "code": "MISSING_ID",
+              "message": "ID mismatch missing=['P017'] extra=[]"
+            }
+          ],
+          "id_contract_valid": false,
+          "json_valid": true,
+          "latency_ms": 13864.76290000428,
+          "prompt_template": "auto_jinja",
+          "repeat": 1,
+          "schema_valid": true,
+          "semantic_exact_rate": 0.9444444444444444,
+          "state_valid": true,
+          "tokens_per_second": 293.83812790753217,
+          "valid_output": false
+        },
+        {
+          "context_only_id_valid": true,
+          "errors": [
+            {
+              "code": "MISSING_ID",
+              "message": "ID mismatch missing=['P017'] extra=[]"
+            }
+          ],
+          "id_contract_valid": false,
+          "json_valid": true,
+          "latency_ms": 13481.029700000363,
+          "prompt_template": "auto_jinja",
+          "repeat": 2,
+          "schema_valid": true,
+          "semantic_exact_rate": 0.9444444444444444,
+          "state_valid": true,
+          "tokens_per_second": 302.20199999133774,
+          "valid_output": false
+        },
+        {
+          "context_only_id_valid": true,
+          "errors": [
+            {
+              "code": "MISSING_ID",
+              "message": "ID mismatch missing=['P017'] extra=[]"
+            }
+          ],
+          "id_contract_valid": false,
+          "json_valid": true,
+          "latency_ms": 13989.043100002164,
+          "prompt_template": "auto_jinja",
+          "repeat": 3,
+          "schema_valid": true,
+          "semantic_exact_rate": 0.9444444444444444,
+          "state_valid": true,
+          "tokens_per_second": 291.22764016518784,
+          "valid_output": false
+        }
+      ],
+      "runtime": "lmstudio-openai-compatible",
+      "source_report": "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/lmstudio_v1_1.json",
+      "status": "FAILED",
+      "stored_schema_sha256": "c7fa809f98bdd1775e58f94f513eb29f761d6b651f029cc988251f949ada665e"
+    },
+    {
+      "aggregate_metrics": {
+        "context_only_id_failures": 0,
+        "duplicate_id_failures": 0,
+        "forbidden_field_failures": 0,
+        "id_contract_failures": 3,
+        "json_failures": 0,
+        "latency_p50_ms": 17247.359200002393,
+        "latency_p95_ms": 17792.337400001998,
+        "latency_total_ms": 52175.47420000483,
+        "missing_id_failures": 3,
+        "schema_failures": 0,
+        "semantic_exact_rate": 0.9444444444444444,
+        "state_failures": 3,
+        "tokens_per_second": 192.498410139473,
+        "transport_failures": 0,
+        "valid_output_rate": 0.0
+      },
+      "endpoint": "http://127.0.0.1:11434",
+      "generated_request_schema_strategy": "source_id_enum_for_blocks_and_problems",
+      "inference_parameters": {
+        "concurrency": 1,
+        "context": 16384,
+        "generated_request_schema_strategy": "source_id_enum_for_blocks_and_problems",
+        "gpu_layers": 34,
+        "max_output": 2048,
+        "model_supported_context": 131072,
+        "prompt_skill_version": "v1",
+        "prompt_templates": [
+          "auto_jinja"
+        ],
+        "repeat_count": 3,
+        "response_format": "json_schema",
+        "seed": 42,
+        "temperature": 0.01,
+        "threads": 12
+      },
+      "model_digest_or_hash": "4e30e2665218745ef463f722c0bf86be0cab6ee676320f1cfadf91e989107448",
+      "model_identifier": "gemma4:e2b",
+      "prompt_sha256": "0f50b93ba8e00e630d3d0b6a211fb57e5191e830c94e9e9ab06310c1d5baaf9b",
+      "prompt_version": "v1",
+      "runs": [
+        {
+          "context_only_id_valid": true,
+          "errors": [
+            {
+              "code": "MISSING_ID",
+              "message": "ID mismatch missing=['P000'] extra=[]"
+            },
+            {
+              "code": "MODEL_STATE_DISAGREEMENT",
+              "message": "MODEL_STATE_DISAGREEMENT: {'author_status_found': {'model': False, 'deterministic': True}}"
+            }
+          ],
+          "id_contract_valid": false,
+          "json_valid": true,
+          "latency_ms": 17792.337400001998,
+          "prompt_template": "auto_jinja",
+          "repeat": 1,
+          "schema_valid": true,
+          "semantic_exact_rate": 0.9444444444444444,
+          "state_valid": false,
+          "tokens_per_second": 188.11456542356677,
+          "valid_output": false
+        },
+        {
+          "context_only_id_valid": true,
+          "errors": [
+            {
+              "code": "MISSING_ID",
+              "message": "ID mismatch missing=['P000'] extra=[]"
+            },
+            {
+              "code": "MODEL_STATE_DISAGREEMENT",
+              "message": "MODEL_STATE_DISAGREEMENT: {'author_status_found': {'model': False, 'deterministic': True}}"
+            }
+          ],
+          "id_contract_valid": false,
+          "json_valid": true,
+          "latency_ms": 17135.777600000438,
+          "prompt_template": "auto_jinja",
+          "repeat": 2,
+          "schema_valid": true,
+          "semantic_exact_rate": 0.9444444444444444,
+          "state_valid": false,
+          "tokens_per_second": 195.32218709890702,
+          "valid_output": false
+        },
+        {
+          "context_only_id_valid": true,
+          "errors": [
+            {
+              "code": "MISSING_ID",
+              "message": "ID mismatch missing=['P000'] extra=[]"
+            },
+            {
+              "code": "MODEL_STATE_DISAGREEMENT",
+              "message": "MODEL_STATE_DISAGREEMENT: {'author_status_found': {'model': False, 'deterministic': True}}"
+            }
+          ],
+          "id_contract_valid": false,
+          "json_valid": true,
+          "latency_ms": 17247.359200002393,
+          "prompt_template": "auto_jinja",
+          "repeat": 3,
+          "schema_valid": true,
+          "semantic_exact_rate": 0.9444444444444444,
+          "state_valid": false,
+          "tokens_per_second": 194.05847789594526,
+          "valid_output": false
+        }
+      ],
+      "runtime": "ollama-openai-compatible",
+      "source_report": "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/ollama_v1.json",
+      "status": "FAILED",
+      "stored_schema_sha256": "c7fa809f98bdd1775e58f94f513eb29f761d6b651f029cc988251f949ada665e"
+    },
+    {
+      "aggregate_metrics": {
+        "context_only_id_failures": 0,
+        "duplicate_id_failures": 0,
+        "forbidden_field_failures": 0,
+        "id_contract_failures": 0,
+        "json_failures": 0,
+        "latency_p50_ms": 19088.15869999671,
+        "latency_p95_ms": 19122.91120000009,
+        "latency_total_ms": 57264.94709999679,
+        "missing_id_failures": 0,
+        "schema_failures": 0,
+        "semantic_exact_rate": 0.8888888888888888,
+        "state_failures": 0,
+        "tokens_per_second": 216.2582358927657,
+        "transport_failures": 0,
+        "valid_output_rate": 1.0
+      },
+      "endpoint": "http://127.0.0.1:11434",
+      "generated_request_schema_strategy": "source_id_enum_for_blocks_and_problems",
+      "inference_parameters": {
+        "concurrency": 1,
+        "context": 16384,
+        "generated_request_schema_strategy": "source_id_enum_for_blocks_and_problems",
+        "gpu_layers": 34,
+        "max_output": 2048,
+        "model_supported_context": 131072,
+        "prompt_skill_version": "v1.1",
+        "prompt_templates": [
+          "auto_jinja"
+        ],
+        "repeat_count": 3,
+        "response_format": "json_schema",
+        "seed": 42,
+        "temperature": 0.01,
+        "threads": 12
+      },
+      "model_digest_or_hash": "4e30e2665218745ef463f722c0bf86be0cab6ee676320f1cfadf91e989107448",
+      "model_identifier": "gemma4:e2b",
+      "prompt_sha256": "d7d816fe7bb63516ca781fb611638e6d255e93be9ab5bf2b845c619756c7a4c8",
+      "prompt_version": "v1.1",
+      "runs": [
+        {
+          "context_only_id_valid": true,
+          "errors": [],
+          "id_contract_valid": true,
+          "json_valid": true,
+          "latency_ms": 19122.91120000009,
+          "prompt_template": "auto_jinja",
+          "repeat": 1,
+          "schema_valid": true,
+          "semantic_exact_rate": 0.8888888888888888,
+          "state_valid": true,
+          "tokens_per_second": 215.86656371519473,
+          "valid_output": true
+        },
+        {
+          "context_only_id_valid": true,
+          "errors": [],
+          "id_contract_valid": true,
+          "json_valid": true,
+          "latency_ms": 19088.15869999671,
+          "prompt_template": "auto_jinja",
+          "repeat": 2,
+          "schema_valid": true,
+          "semantic_exact_rate": 0.8888888888888888,
+          "state_valid": true,
+          "tokens_per_second": 216.25954061864908,
+          "valid_output": true
+        },
+        {
+          "context_only_id_valid": true,
+          "errors": [],
+          "id_contract_valid": true,
+          "json_valid": true,
+          "latency_ms": 19053.877199999988,
+          "prompt_template": "auto_jinja",
+          "repeat": 3,
+          "schema_valid": true,
+          "semantic_exact_rate": 0.8888888888888888,
+          "state_valid": true,
+          "tokens_per_second": 216.64860334445328,
+          "valid_output": true
+        }
+      ],
+      "runtime": "ollama-openai-compatible",
+      "source_report": "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/ollama_v1_1.json",
+      "status": "COMPLETED",
+      "stored_schema_sha256": "c7fa809f98bdd1775e58f94f513eb29f761d6b651f029cc988251f949ada665e"
+    }
+  ],
+  "cycle": "LLM-0.3 Contract Constrained Repair",
+  "fixture": "fixtures/synthetic/llm_benchmark/paragraph_classifier_v1.json",
+  "gates": {
+    "context_only_id_failures": 0,
+    "duplicate_id_failures": 0,
+    "id_contract_failures": 0,
+    "missing_id_failures": 0,
+    "schema_failures": 0,
+    "semantic_exact_rate_min": 0.8,
+    "state_failures": 0,
+    "valid_output_rate": 1.0
+  },
+  "generated_request_schema_strategy": "source_id_enum_for_blocks_and_problems",
+  "implementation_sha": "6157e6ec930790483f6552c7659dc0632910a14a",
+  "open_defects": [
+    "LMSTUDIO_MISSING_AMBIGUOUS_SOURCE_ID_P017",
+    "REAL_GEMMA_BENCHMARK_GATES_FAILED"
+  ],
+  "promotion_decision": {
+    "candidate": "paragraph_classifier/v1.1",
+    "candidate_passed_all_gates_on_all_runtimes": false,
+    "reason": "Candidate passed host Ollama but failed LM Studio due missing P017 in all repeats.",
+    "recommendation": "do_not_promote"
+  },
+  "prompt_versions": {
+    "v1": {
+      "path": "skills/journal_builder/prompts/paragraph_classifier/v1/system.txt",
+      "sha256": "0f50b93ba8e00e630d3d0b6a211fb57e5191e830c94e9e9ab06310c1d5baaf9b"
+    },
+    "v1.1": {
+      "path": "skills/journal_builder/prompts/paragraph_classifier/v1.1/system.txt",
+      "sha256": "d7d816fe7bb63516ca781fb611638e6d255e93be9ab5bf2b845c619756c7a4c8"
+    }
+  },
+  "repeat_count": 3,
+  "repository": "ZvezniyLord/Release-AI-Editor-5.5-Public",
+  "status": "FAILED",
+  "stored_output_schema": "skills/journal_builder/schemas/paragraph_classifier_output.v1.schema.json",
+  "stored_schema_sha256": "c7fa809f98bdd1775e58f94f513eb29f761d6b651f029cc988251f949ada665e"
+}

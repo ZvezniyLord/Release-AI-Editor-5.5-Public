@@ -9,6 +9,12 @@
       "output_schema": "schemas/paragraph_classifier_output.v1.schema.json",
       "status": "active"
     },
+    "paragraph_classifier/v1.1": {
+      "system": "prompts/paragraph_classifier/v1.1/system.txt",
+      "input_schema": "schemas/paragraph_classifier_input.v1_1.schema.json",
+      "output_schema": "schemas/paragraph_classifier_output.v1.schema.json",
+      "status": "candidate"
+    },
     "paragraph_classifier/v2": {
       "system": "prompts/paragraph_classifier/v2/system.txt",
       "input_schema": "schemas/paragraph_classifier_input.v1.schema.json",

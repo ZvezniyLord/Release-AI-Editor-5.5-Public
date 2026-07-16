@@ -12,13 +12,21 @@ Real Gemma 4 E2B benchmarks were executed against LM Studio `google/gemma-4-e2b`
 status:
 Open. LLM-0.2 is FAILED. Do not start LLM-1 or use the model in journal workflows until this is resolved.
 
+### LLM-0.3 LMSTUDIO_MISSING_AMBIGUOUS_SOURCE_ID_P017
+
+evidence:
+Candidate prompt v1.1 with source/context split and source-ID enum constraints still caused LM Studio `google/gemma-4-e2b` to omit source ID `P017` in all 3 repeats.
+
+status:
+Open. Candidate v1.1 cannot be promoted.
+
 ### LLM-0.2 LMSTUDIO_CONTEXT_ONLY_ID_RETURNED
 
 evidence:
 LM Studio returned context-only paragraph ID `P018` for both `auto_jinja` and `manual_chatml`.
 
 status:
-Open.
+Closed for LLM-0.3 candidate v1.1. LM Studio v1.1 had zero context-only ID failures, but still failed on missing `P017`.
 
 ### LLM-0.2 OLLAMA_EMPTY_PARAGRAPH_ID_MISSING
 
@@ -26,7 +34,7 @@ evidence:
 Host Ollama omitted decision paragraph ID `P000` for both prompt-template runs.
 
 status:
-Open.
+Closed for LLM-0.3 candidate v1.1 on host Ollama. Candidate had zero missing ID failures on Ollama, but overall promotion remains blocked by LM Studio.
 
 ### LLM-0.2 MODEL_STATE_DISAGREEMENT
 
@@ -34,7 +42,7 @@ evidence:
 LM Studio `auto_jinja` and both host Ollama runs disagreed with deterministic worker state.
 
 status:
-Open.
+Closed for LLM-0.3 candidate v1.1. State failures were zero on both measured runtimes.
 
 ### LLM-0 TARGET_GEMMA4_E2B_RUNTIME_NOT_AVAILABLE
 

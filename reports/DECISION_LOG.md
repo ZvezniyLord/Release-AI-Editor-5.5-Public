@@ -187,3 +187,25 @@ verification:
 
 status:
 FAILED. `REAL_GEMMA4_E2B_BENCHMARK_NOT_RUN` is closed, but `REAL_GEMMA_BENCHMARK_GATES_FAILED` is open.
+
+## 2026-07-16 - Keep V1.1 Candidate Unpromoted After Mixed Runtime Results
+
+problem:
+LLM-0.2 showed context-only ID leakage, missing empty paragraph ID, and model state disagreement. LLM-0.3 needed to repair those modes without changing business types or weakening gates.
+
+evidence:
+Candidate v1.1 split source/context input, preserved v1 output schema, and added generated source-ID enum constraints. Host Ollama `gemma4:e2b` passed all gates with v1.1 in 3/3 repeats. LM Studio `google/gemma-4-e2b` failed all v1.1 repeats by missing source ID `P017`.
+
+options:
+1. Promote v1.1 because host Ollama passed.
+2. Do not promote v1.1 because both target runtimes must pass.
+3. Silently post-correct LM Studio output after inference.
+
+decision:
+Choose option 2. Keep v1 active, keep v1.1 as candidate only, and report the remaining LM Studio missing-ID defect. Do not post-correct model output.
+
+verification:
+`python -m pytest -q` passed with 67 tests. Docker worker build passed. Real ablation ran 2 prompt versions x 2 runtimes x 3 repeats. Gitleaks found no leaks.
+
+status:
+FAILED. Candidate v1.1 is not promotion-ready.

@@ -5,13 +5,18 @@ from typing import Any
 
 from journal_factory.llm.benchmark import (
     BenchmarkConfig,
+    constrain_response_schema_to_source_ids,
     load_benchmark_fixture,
     response_format_for_mode,
     run_real_gemma_benchmark,
 )
+from jsonschema import Draft202012Validator
+from journal_factory.llm.chunking import Paragraph
 from journal_factory.llm.client import CompletionResult, LLMRuntimeError, StaticJSONClient
 from journal_factory.llm.contracts import load_skill_schema
 from journal_factory.llm.synthetic import expected_payload, malformed_payload_cases, synthetic_paragraphs
+from journal_factory.llm.templates import render_messages
+from journal_factory.llm.templates import load_system_prompt
 
 
 class ScriptedClient:
@@ -70,6 +75,7 @@ def _config(*, real_model: bool = True, prompt_templates: tuple[str, ...] = ("au
         gpu_layers=34,
         concurrency=1,
         prompt_templates=prompt_templates,
+        prompt_version="v1",
         response_format="json_schema",
         repeat_count=1,
         real_model=real_model,
@@ -88,10 +94,62 @@ def test_fixture_preserves_v1_business_type_names_and_orcid_service_data() -> No
 
 def test_response_format_json_schema_uses_versioned_skill_schema() -> None:
     schema = load_skill_schema()
-    response_format = response_format_for_mode("json_schema", schema)
+    response_format = response_format_for_mode("json_schema", schema, source_ids=["P000", "P001"])
     assert response_format is not None
     assert response_format["type"] == "json_schema"
     assert response_format["json_schema"]["schema"]["$id"] == schema["$id"]
+    enum = response_format["json_schema"]["schema"]["$defs"]["block"]["properties"]["paragraph_ids"]["items"]["enum"]
+    assert enum == ["P000", "P001"]
+
+
+def test_constrained_response_schema_rejects_context_only_id_without_mutating_stored_schema() -> None:
+    schema = load_skill_schema()
+    constrained = constrain_response_schema_to_source_ids(schema, ["P000", "P001"])
+    assert "enum" not in schema["$defs"]["block"]["properties"]["paragraph_ids"]["items"]
+    assert constrained["$defs"]["block"]["properties"]["paragraph_ids"]["items"]["enum"] == ["P000", "P001"]
+    context_payload = expected_payload(synthetic_paragraphs())
+    context_payload["blocks"][0]["paragraph_ids"] = ["P018"]
+    context_errors = list(Draft202012Validator(constrained).iter_errors(context_payload))
+    assert context_errors
+
+
+def test_v1_1_payload_separates_source_and_context_ids() -> None:
+    paragraphs = synthetic_paragraphs()
+    messages = render_messages(paragraphs, schema=load_skill_schema(), prompt_template="auto_jinja", prompt_version="v1.1")
+    user_payload = json.loads(messages[1]["content"])
+    assert "source_paragraphs" in user_payload
+    assert "context_paragraphs" in user_payload
+    source_ids = [item["paragraph_id"] for item in user_payload["source_paragraphs"]]
+    context_ids = [item["paragraph_id"] for item in user_payload["context_paragraphs"]]
+    assert "P018" not in source_ids
+    assert context_ids == ["P018"]
+    assert user_payload["source_id_contract"]["required_source_ids"] == source_ids
+    assert user_payload["source_id_contract"]["forbidden_context_ids"] == context_ids
+
+
+def test_v1_1_prompt_requires_unknown_source_paragraphs_to_remain_blocks() -> None:
+    prompt = load_system_prompt(version="v1.1")
+    assert "Не створюй нові paragraph ID" in prompt
+    assert "source_id_contract.required_source_ids" in prompt
+
+
+def test_v1_1_payload_preserves_empty_source_paragraph_positions() -> None:
+    cases = [
+        [("P000", ""), ("P001", "Text")],
+        [("P000", "Before"), ("P001", ""), ("P002", "After")],
+        [("P000", "Text"), ("P001", "")],
+        [("P000", ""), ("P001", ""), ("P002", "Text")],
+    ]
+    for case in cases:
+        paragraphs = [Paragraph(paragraph_id, text) for paragraph_id, text in case]
+        messages = render_messages(paragraphs, schema=load_skill_schema(), prompt_template="auto_jinja", prompt_version="v1.1")
+        user_payload = json.loads(messages[1]["content"])
+        assert [item["paragraph_id"] for item in user_payload["source_paragraphs"]] == [
+            paragraph_id for paragraph_id, _text in case
+        ]
+        assert [item["is_empty"] for item in user_payload["source_paragraphs"]] == [
+            text.strip() == "" for _paragraph_id, text in case
+        ]
 
 
 def test_real_benchmark_completed_when_scripted_real_client_passes_all_gates() -> None:
@@ -119,6 +177,7 @@ def test_context_only_id_failure_blocks_benchmark_gates() -> None:
     assert report["status"] == "FAILED"
     assert report["metrics"]["id_contract_failures"] == 1
     assert report["metrics"]["context_only_id_failures"] == 1
+    assert report["metrics"]["missing_id_failures"] == 0
     assert report["gates"]["passed"] is False
 
 

@@ -10,6 +10,7 @@ from journal_factory.llm.contracts import (
     IDContractError,
     ModelStateDisagreementError,
     SchemaValidationError,
+    deterministic_state_transition,
     load_skill_schema,
     validate_model_payload,
     validate_model_text,
@@ -106,6 +107,72 @@ def test_model_state_disagreement_fails_closed() -> None:
             cases["state_disagreement"],
             expected_ids=_expected_ids(),
             context_only_ids=_context_only_ids(),
+            expected_source_hash=SOURCE_HASH,
+            input_state={},
+        )
+
+
+@pytest.mark.parametrize(
+    ("block_type", "state_key"),
+    [
+        ("section", "section_found"),
+        ("doi", "doi_found"),
+        ("udc", "udc_found"),
+        ("author", "authors_found"),
+        ("author_status", "author_status_found"),
+        ("affiliation", "affiliation_found"),
+        ("city_country", "city_country_found"),
+        ("title", "title_found"),
+        ("annotation", "annotation_found"),
+        ("keywords", "keywords_found"),
+        ("main_text", "body_started"),
+        ("table_caption", "body_started"),
+        ("figure_caption", "body_started"),
+        ("formula", "body_started"),
+        ("references_heading", "references_started"),
+        ("references_item", "references_started"),
+        ("service_data", "service_data_found"),
+    ],
+)
+def test_deterministic_state_transition_sets_each_allowed_state(block_type: str, state_key: str) -> None:
+    state = deterministic_state_transition(
+        {},
+        [{"block_type": block_type, "paragraph_ids": ["P001"], "confidence": 1.0, "evidence": []}],
+    )
+    assert state[state_key] is True
+
+
+def test_deterministic_state_transition_preserves_true_input_state() -> None:
+    state = deterministic_state_transition({"title_found": True}, [])
+    assert state["title_found"] is True
+
+
+@pytest.mark.parametrize(
+    ("block_type", "wrong_state_key"),
+    [
+        ("author_status", "author_status_found"),
+        ("references_heading", "references_started"),
+        ("service_data", "service_data_found"),
+    ],
+)
+def test_forbidden_state_disagreement_cases_fail_closed(block_type: str, wrong_state_key: str) -> None:
+    paragraphs = synthetic_paragraphs()
+    payload = expected_payload(paragraphs)
+    payload["blocks"] = [
+        {
+            "block_type": block_type,
+            "paragraph_ids": ["P000"],
+            "confidence": 1.0,
+            "evidence": ["synthetic"],
+        }
+    ]
+    payload["state_update"] = deterministic_state_transition({}, payload["blocks"])
+    payload["state_update"][wrong_state_key] = False
+    with pytest.raises(ModelStateDisagreementError):
+        validate_model_payload(
+            payload,
+            expected_ids=["P000"],
+            context_only_ids=[],
             expected_source_hash=SOURCE_HASH,
             input_state={},
         )

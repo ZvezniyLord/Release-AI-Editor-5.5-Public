@@ -1,0 +1,173 @@
+{
+  "benchmark_parameters": {
+    "concurrency": 1,
+    "context": 16384,
+    "generated_request_schema_strategy": "source_id_enum_for_blocks_and_problems",
+    "gpu_layers": 34,
+    "max_output": 2048,
+    "model_supported_context": 131072,
+    "prompt_skill_version": "v1",
+    "prompt_templates": [
+      "auto_jinja"
+    ],
+    "repeat_count": 3,
+    "response_format": "json_schema",
+    "seed": 42,
+    "temperature": 0.01,
+    "threads": 12
+  },
+  "blockers": [
+    "REAL_GEMMA_BENCHMARK_GATES_FAILED"
+  ],
+  "closed_blockers": [
+    "REAL_GEMMA4_E2B_BENCHMARK_NOT_RUN"
+  ],
+  "cycle": "LLM-0.3",
+  "docker_image_digest": null,
+  "docker_image_name": null,
+  "endpoint": "http://127.0.0.1:1234",
+  "fixture_count": 1,
+  "fixture_path": "fixtures/synthetic/llm_benchmark/paragraph_classifier_v1.json",
+  "gates": {
+    "context_only_id_failures": 0,
+    "duplicate_id_failures": 0,
+    "forbidden_field_failures": 0,
+    "id_contract_failures": 0,
+    "missing_id_failures": 0,
+    "passed": false,
+    "schema_failures": 0,
+    "semantic_exact_rate_min": 0.8,
+    "state_failures": 0,
+    "valid_output_rate": 1.0
+  },
+  "metrics": {
+    "context_only_id_failures": 0,
+    "duplicate_id_failures": 3,
+    "forbidden_field_failures": 0,
+    "id_contract_failures": 3,
+    "json_failures": 0,
+    "latency_p50_ms": 13696.41729999421,
+    "latency_p95_ms": 15934.28270000004,
+    "latency_total_ms": 43297.363099991344,
+    "missing_id_failures": 0,
+    "schema_failures": 0,
+    "semantic_exact_rate": 0.9629629629629629,
+    "state_failures": 3,
+    "tokens_per_second": 236.91992541386952,
+    "transport_failures": 0,
+    "valid_output_rate": 0.0
+  },
+  "model_file_sha256": "6febf73c7c6b44c550ba857ceca3788262ce2272603ca16b1f2609556205dea3",
+  "model_identifier": "google/gemma-4-e2b",
+  "open_follow_ups": [
+    "Keep v2 classifier schema as candidate until a separate migration decision is approved."
+  ],
+  "prompt_path": "skills/journal_builder/prompts/paragraph_classifier/v1/system.txt",
+  "prompt_skill_version": "v1",
+  "prompt_version": "paragraph-classifier-v1",
+  "runs": [
+    {
+      "chunk_id": "chunk-001",
+      "completion_tokens": 1449,
+      "context_only_id_count": 1,
+      "context_only_id_valid": true,
+      "errors": [
+        {
+          "code": "DUPLICATE_ID",
+          "message": "duplicate paragraph IDs: ['P017']"
+        },
+        {
+          "code": "MODEL_STATE_DISAGREEMENT",
+          "message": "MODEL_STATE_DISAGREEMENT: {'author_status_found': {'model': False, 'deterministic': True}, 'affiliation_found': {'model': False, 'deterministic': True}, 'body_started': {'model': False, 'deterministic': True}, 'references_started': {'model': False, 'deterministic': True}}"
+        }
+      ],
+      "expected_decision_id_count": 18,
+      "fixture_version": "paragraph-classifier-fixture-v1",
+      "id_contract_valid": false,
+      "json_valid": true,
+      "latency_ms": 15934.28270000004,
+      "model_reported": "google/gemma-4-e2b",
+      "prompt_template": "auto_jinja",
+      "prompt_tokens": 2029,
+      "repeat": 1,
+      "response_format": "json_schema",
+      "schema_valid": true,
+      "semantic_exact_rate": 1.0,
+      "state_valid": false,
+      "tokens_per_second": 218.2713312216693,
+      "total_tokens": 3478,
+      "valid_output": false
+    },
+    {
+      "chunk_id": "chunk-001",
+      "completion_tokens": 1340,
+      "context_only_id_count": 1,
+      "context_only_id_valid": true,
+      "errors": [
+        {
+          "code": "DUPLICATE_ID",
+          "message": "duplicate paragraph IDs: ['P017']"
+        },
+        {
+          "code": "MODEL_STATE_DISAGREEMENT",
+          "message": "MODEL_STATE_DISAGREEMENT: {'author_status_found': {'model': False, 'deterministic': True}}"
+        }
+      ],
+      "expected_decision_id_count": 18,
+      "fixture_version": "paragraph-classifier-fixture-v1",
+      "id_contract_valid": false,
+      "json_valid": true,
+      "latency_ms": 13696.41729999421,
+      "model_reported": "google/gemma-4-e2b",
+      "prompt_template": "auto_jinja",
+      "prompt_tokens": 2029,
+      "repeat": 2,
+      "response_format": "json_schema",
+      "schema_valid": true,
+      "semantic_exact_rate": 0.9444444444444444,
+      "state_valid": false,
+      "tokens_per_second": 245.97642726634177,
+      "total_tokens": 3369,
+      "valid_output": false
+    },
+    {
+      "chunk_id": "chunk-001",
+      "completion_tokens": 1340,
+      "context_only_id_count": 1,
+      "context_only_id_valid": true,
+      "errors": [
+        {
+          "code": "DUPLICATE_ID",
+          "message": "duplicate paragraph IDs: ['P017']"
+        },
+        {
+          "code": "MODEL_STATE_DISAGREEMENT",
+          "message": "MODEL_STATE_DISAGREEMENT: {'author_status_found': {'model': False, 'deterministic': True}}"
+        }
+      ],
+      "expected_decision_id_count": 18,
+      "fixture_version": "paragraph-classifier-fixture-v1",
+      "id_contract_valid": false,
+      "json_valid": true,
+      "latency_ms": 13666.663099997095,
+      "model_reported": "google/gemma-4-e2b",
+      "prompt_template": "auto_jinja",
+      "prompt_tokens": 2029,
+      "repeat": 3,
+      "response_format": "json_schema",
+      "schema_valid": true,
+      "semantic_exact_rate": 0.9444444444444444,
+      "state_valid": false,
+      "tokens_per_second": 246.51201775359752,
+      "total_tokens": 3369,
+      "valid_output": false
+    }
+  ],
+  "runtime": "lmstudio-openai-compatible",
+  "schema_path": "skills/journal_builder/schemas/paragraph_classifier_output.v1.schema.json",
+  "schema_version": "paragraph_classifier_output.v1",
+  "status": "FAILED",
+  "total_wall_time_ms": 43303.8308000032,
+  "v1_v2_decision": "v1 retained for LLM-0.2; v2 remains candidate and was not promoted.",
+  "validated_operational_context": null
+}
