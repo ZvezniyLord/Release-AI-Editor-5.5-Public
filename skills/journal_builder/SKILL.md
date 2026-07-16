@@ -16,6 +16,9 @@ from `journal-worker`, returns JSON, and never edits DOCX files.
 
 - `paragraph_classifier/v1`: active contract. Preserves the current business
   type names exactly.
+- `paragraph_classifier/v1.1`: candidate prompt for the same v1 output
+  contract. It separates source paragraphs from context paragraphs and adds
+  stricter ID/state instructions. It is not the default.
 - `paragraph_classifier/v2`: candidate contract only. It is not activated by
   default and requires a migration decision before use.
 

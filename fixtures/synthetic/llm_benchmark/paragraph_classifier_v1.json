@@ -51,6 +51,8 @@
     "schema_failures": 0,
     "id_contract_failures": 0,
     "context_only_id_failures": 0,
+    "missing_id_failures": 0,
+    "duplicate_id_failures": 0,
     "state_failures": 0,
     "forbidden_field_failures": 0
   }

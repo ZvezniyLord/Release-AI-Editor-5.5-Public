@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 import statistics
 import time
 from dataclasses import dataclass
@@ -61,6 +62,7 @@ class BenchmarkConfig:
     gpu_layers: int
     concurrency: int
     prompt_templates: tuple[str, ...]
+    prompt_version: str
     response_format: str
     repeat_count: int
     real_model: bool
@@ -90,18 +92,35 @@ def load_benchmark_fixture(path: Path = DEFAULT_FIXTURE_PATH) -> BenchmarkFixtur
     )
 
 
-def response_format_for_mode(mode: str, schema: dict[str, Any]) -> dict[str, Any] | None:
+def constrain_response_schema_to_source_ids(
+    schema: dict[str, Any],
+    source_ids: list[str],
+) -> dict[str, Any]:
+    constrained = deepcopy(schema)
+    id_items_schema: dict[str, Any] = {"type": "string", "enum": list(source_ids)}
+    constrained["$defs"]["block"]["properties"]["paragraph_ids"]["items"] = deepcopy(id_items_schema)
+    constrained["$defs"]["problem"]["properties"]["paragraph_ids"]["items"] = deepcopy(id_items_schema)
+    return constrained
+
+
+def response_format_for_mode(
+    mode: str,
+    schema: dict[str, Any],
+    *,
+    source_ids: list[str] | None = None,
+) -> dict[str, Any] | None:
     if mode == "none":
         return None
     if mode == "json_object":
         return {"type": "json_object"}
     if mode == "json_schema":
+        active_schema = constrain_response_schema_to_source_ids(schema, source_ids) if source_ids else schema
         return {
             "type": "json_schema",
             "json_schema": {
                 "name": "paragraph_classifier_output_v1",
                 "strict": True,
-                "schema": schema,
+                "schema": active_schema,
             },
         }
     raise ValueError(f"unsupported response_format mode: {mode}")
@@ -146,6 +165,10 @@ def _error_code(exc: Exception) -> str:
         if "duplicate paragraph IDs" in message:
             return "DUPLICATE_ID"
         if "ID mismatch" in message:
+            if "missing=[]" not in message:
+                return "MISSING_ID"
+            if "extra=[]" not in message:
+                return "EXTRA_ID"
             return "ID_CONTRACT_MISMATCH"
         if "reordered" in message:
             return "ID_ORDER_CHANGED"
@@ -246,6 +269,18 @@ def _aggregate_rates(runs: list[dict[str, Any]]) -> dict[str, Any]:
         "context_only_id_failures": sum(
             1 for run in runs if run.get("context_only_id_valid") is False
         ),
+        "missing_id_failures": sum(
+            1
+            for run in runs
+            for error in run.get("errors", [])
+            if error.get("code") == "MISSING_ID"
+        ),
+        "duplicate_id_failures": sum(
+            1
+            for run in runs
+            for error in run.get("errors", [])
+            if error.get("code") == "DUPLICATE_ID"
+        ),
         "state_failures": sum(1 for run in runs if run.get("json_valid") and not run.get("state_valid")),
         "forbidden_field_failures": sum(
             1
@@ -269,6 +304,8 @@ def gates_pass(metrics: dict[str, Any], gates: dict[str, Any]) -> bool:
         and metrics["schema_failures"] <= int(gates["schema_failures"])
         and metrics["id_contract_failures"] <= int(gates["id_contract_failures"])
         and metrics["context_only_id_failures"] <= int(gates["context_only_id_failures"])
+        and metrics["missing_id_failures"] <= int(gates.get("missing_id_failures", 0))
+        and metrics["duplicate_id_failures"] <= int(gates.get("duplicate_id_failures", 0))
         and metrics["state_failures"] <= int(gates["state_failures"])
         and metrics["forbidden_field_failures"] <= int(gates["forbidden_field_failures"])
         and metrics["json_failures"] == 0
@@ -291,7 +328,6 @@ def run_real_gemma_benchmark(
         max_output_tokens=config.max_output,
         overflow_policy="rechunk",
     )
-    response_format = response_format_for_mode(config.response_format, schema)
     runs: list[dict[str, Any]] = []
     started = time.perf_counter()
 
@@ -315,6 +351,13 @@ def run_real_gemma_benchmark(
                     list(chunk.paragraphs),
                     schema=schema,
                     prompt_template=prompt_template,
+                    prompt_version=config.prompt_version,
+                )
+                decision_ids = [paragraph.paragraph_id for paragraph in chunk.paragraphs if not paragraph.context_only]
+                response_format = response_format_for_mode(
+                    config.response_format,
+                    schema,
+                    source_ids=decision_ids,
                 )
                 try:
                     call_started = time.perf_counter()
@@ -375,7 +418,7 @@ def run_real_gemma_benchmark(
         status = "FAILED"
 
     return {
-        "cycle": "LLM-0.2",
+        "cycle": "LLM-0.3",
         "status": status,
         "runtime": config.runtime,
         "model_identifier": config.model_identifier,
@@ -383,9 +426,10 @@ def run_real_gemma_benchmark(
         "model_file_sha256": config.model_file_sha256,
         "docker_image_name": config.docker_image_name,
         "docker_image_digest": config.docker_image_digest,
-        "prompt_path": "skills/journal_builder/prompts/paragraph_classifier/v1/system.txt",
         "schema_path": "skills/journal_builder/schemas/paragraph_classifier_output.v1.schema.json",
+        "prompt_path": f"skills/journal_builder/prompts/paragraph_classifier/{config.prompt_version}/system.txt",
         "prompt_version": PROMPT_VERSION,
+        "prompt_skill_version": config.prompt_version,
         "schema_version": "paragraph_classifier_output.v1",
         "fixture_path": fixture_path.as_posix(),
         "fixture_count": 1,
@@ -399,7 +443,11 @@ def run_real_gemma_benchmark(
             "gpu_layers": config.gpu_layers,
             "concurrency": config.concurrency,
             "prompt_templates": list(config.prompt_templates),
+            "prompt_skill_version": config.prompt_version,
             "response_format": config.response_format,
+            "generated_request_schema_strategy": (
+                "source_id_enum_for_blocks_and_problems" if config.response_format == "json_schema" else "none"
+            ),
             "repeat_count": config.repeat_count,
         },
         "validated_operational_context": config.context if status == "COMPLETED" else None,
