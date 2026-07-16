@@ -66,7 +66,9 @@ def classify_block_type(text: str, *, context_only: bool = False) -> str | None:
         return "affiliation"
     if "title" in lowered and len(stripped.split()) <= 8:
         return "title"
-    if re.match(r"^[A-Z][A-Za-z .-]+,\s*[A-Z][A-Za-z .-]+$", stripped):
+    if re.match(r"^[A-Z][A-Za-z .-]+,\s*[A-Z][A-Za-z .-]+$", stripped) and any(
+        country in lowered for country in ("ukraine", "poland", "germany", "france")
+    ):
         return "city_country"
     if " = " in stripped or "^" in stripped:
         return "formula"

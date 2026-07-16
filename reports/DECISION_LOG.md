@@ -1,6 +1,6 @@
 # Decision Log
 
-Date: 2026-07-15
+Date: 2026-07-16
 
 ## Decision Entry Format
 
@@ -165,3 +165,25 @@ Public pytest passed with 35 tests. Docker worker build passed. Worker image moc
 
 status:
 Completed. Real Gemma 4 E2B benchmark is explicitly deferred to LLM-0.2.
+
+## 2026-07-16 - Run Real Gemma Benchmark Against Active V1 Contract
+
+problem:
+LLM-0.1 aligned the contract but did not prove that a real local Gemma 4 E2B model can satisfy the v1 JSON Schema, exact paragraph ID contract, state checks, and semantic fixture expectations.
+
+evidence:
+Local discovery found the authoritative repository at `ZvezniyLord/Release-AI-Editor-5.5-Public`. The active v1 prompt/schema are under `skills/journal_builder`. Available real Gemma endpoints were LM Studio `google/gemma-4-e2b` on `127.0.0.1:1234` and host Ollama `gemma4:e2b` on `127.0.0.1:11434`. Docker Ollama did not contain Gemma 4 E2B.
+
+options:
+1. Treat mock transport/schema smoke as a completed benchmark.
+2. Run real benchmarks against available local Gemma 4 E2B endpoints and fail closed if gates fail.
+3. Change the classifier contract or promote v2 to make the current model output pass.
+
+decision:
+Choose option 2. Add a reproducible benchmark harness and synthetic fixture, run both real endpoints, keep v1 active, and do not promote v2 or alter journal workflows in this cycle.
+
+verification:
+`python -m pytest -q` passed with 42 tests. Docker worker build passed. Real LM Studio and host Ollama benchmarks executed. Both returned v1-schema-valid JSON but failed exact ID/state gates.
+
+status:
+FAILED. `REAL_GEMMA4_E2B_BENCHMARK_NOT_RUN` is closed, but `REAL_GEMMA_BENCHMARK_GATES_FAILED` is open.
