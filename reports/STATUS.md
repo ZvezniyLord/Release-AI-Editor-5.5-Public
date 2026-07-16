@@ -1,6 +1,6 @@
 # Status
 
-Date: 2026-07-15
+Date: 2026-07-16
 
 Repository role: sanitized public development mirror.
 
@@ -182,3 +182,34 @@ Closed blockers:
 Remaining follow-up:
 
 Real Gemma 4 E2B benchmark remains for LLM-0.2. Do not start it without explicit instruction.
+
+## LLM-0.2 Real Gemma Benchmark
+
+Task status: FAILED, not COMPLETED.
+
+Implementation SHA: `fcf857698fe87b642d3464ad6d9ed9719f6ded22`
+
+Public changes:
+
+- Added `journal_factory.llm.benchmark` with versioned fixture loading, JSON Schema response-format support, exact ID/state/semantic gate aggregation, and fail-closed final status rules.
+- Added `fixtures/synthetic/llm_benchmark/paragraph_classifier_v1.json`.
+- Added regression tests for benchmark gates, mock rejection, endpoint unavailability, context-only IDs, malformed JSON, and state disagreement.
+- Kept v1 active and did not promote v2.
+
+Real model result:
+
+- LM Studio `google/gemma-4-e2b` at `http://127.0.0.1:1234`: real benchmark executed, gates failed.
+- Host Ollama `gemma4:e2b` at `http://127.0.0.1:11434`: real benchmark executed, gates failed.
+- Valid JSON/schema rate: schema failures were 0 for both runtimes.
+- Exact ID/state gates failed, so validated operational context remains null.
+
+Verification:
+
+- Public pytest: PASS, 42 passed.
+- Docker worker build: PASS.
+- Compose config validation: PASS.
+- Docker-based gitleaks scan: PASS.
+
+Stop condition:
+
+Stop for review. Do not start LLM-1, prompt repair, A020, style cleanup, journal regeneration, or TOC.

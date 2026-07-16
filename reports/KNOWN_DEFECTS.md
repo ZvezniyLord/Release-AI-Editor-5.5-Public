@@ -1,8 +1,40 @@
 # Known Defects
 
-Date: 2026-07-15
+Date: 2026-07-16
 
 ## Open
+
+### LLM-0.2 REAL_GEMMA_BENCHMARK_GATES_FAILED
+
+evidence:
+Real Gemma 4 E2B benchmarks were executed against LM Studio `google/gemma-4-e2b` and host Ollama `gemma4:e2b`. Both returned v1-schema-valid JSON, but neither passed the exact ID/state gates.
+
+status:
+Open. LLM-0.2 is FAILED. Do not start LLM-1 or use the model in journal workflows until this is resolved.
+
+### LLM-0.2 LMSTUDIO_CONTEXT_ONLY_ID_RETURNED
+
+evidence:
+LM Studio returned context-only paragraph ID `P018` for both `auto_jinja` and `manual_chatml`.
+
+status:
+Open.
+
+### LLM-0.2 OLLAMA_EMPTY_PARAGRAPH_ID_MISSING
+
+evidence:
+Host Ollama omitted decision paragraph ID `P000` for both prompt-template runs.
+
+status:
+Open.
+
+### LLM-0.2 MODEL_STATE_DISAGREEMENT
+
+evidence:
+LM Studio `auto_jinja` and both host Ollama runs disagreed with deterministic worker state.
+
+status:
+Open.
 
 ### LLM-0 TARGET_GEMMA4_E2B_RUNTIME_NOT_AVAILABLE
 
@@ -10,7 +42,7 @@ evidence:
 The required Gemma 4 E2B OpenAI-compatible endpoint/model was not configured. A local Ollama endpoint was available but listed `qwen3.5:latest` and `gemma2:2b`, not Gemma 4 E2B.
 
 status:
-Open. No validated operational context is claimed for Gemma 4 E2B.
+Superseded for host-local endpoints by LLM-0.2: LM Studio and host Ollama Gemma 4 E2B endpoints were found and benchmarked. Docker-managed target model availability remains an open follow-up.
 
 ### LLM-0 OLLAMA_GEMMA2_PROBE_SCHEMA_INVALID
 
@@ -69,6 +101,11 @@ status:
 Open. Full journal PASS remains forbidden.
 
 ## Closed Or Superseded
+
+### LLM-0.2 REAL_GEMMA4_E2B_BENCHMARK_NOT_RUN
+
+status:
+Closed. Real Gemma 4 E2B benchmark requests were executed in LLM-0.2. The cycle still failed because gates did not pass.
 
 ### LLM-0 CHANGESET_ARCHIVE_UNAVAILABLE
 

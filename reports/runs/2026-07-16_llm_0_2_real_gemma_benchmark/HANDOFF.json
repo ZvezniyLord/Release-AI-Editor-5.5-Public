@@ -1,0 +1,102 @@
+{
+  "artifact_data_classes": [
+    "public_code",
+    "sanitized_reports",
+    "synthetic_fixtures",
+    "docker_config"
+  ],
+  "base_sha": "932e0bf802de243db1da3399f73cca5371ef4cd4",
+  "blockers": [
+    "REAL_GEMMA_BENCHMARK_GATES_FAILED"
+  ],
+  "cycle": "LLM-0.2 Real Gemma Benchmark",
+  "implementation_commit_sha": "fcf857698fe87b642d3464ad6d9ed9719f6ded22",
+  "model_config_summary": {
+    "active_prompt": "skills/journal_builder/prompts/paragraph_classifier/v1/system.txt",
+    "active_schema": "skills/journal_builder/schemas/paragraph_classifier_output.v1.schema.json",
+    "closed_blockers": [
+      "REAL_GEMMA4_E2B_BENCHMARK_NOT_RUN"
+    ],
+    "docker_worker_image": "journal-factory-worker:llm0-2",
+    "lmstudio_benchmark": "reports/runs/2026-07-16_llm_0_2_real_gemma_benchmark/REAL_GEMMA_BENCHMARK.json",
+    "mock_transport_only": false,
+    "ollama_benchmark": "reports/runs/2026-07-16_llm_0_2_real_gemma_benchmark/REAL_GEMMA_BENCHMARK_OLLAMA.json",
+    "real_model_benchmark": "executed_failed_gates",
+    "runtime_summary": [
+      {
+        "endpoint": "http://127.0.0.1:1234",
+        "model": "google/gemma-4-e2b",
+        "runtime": "lmstudio-openai-compatible",
+        "status": "FAILED"
+      },
+      {
+        "endpoint": "http://127.0.0.1:11434",
+        "model": "gemma4:e2b",
+        "runtime": "ollama-openai-compatible",
+        "status": "FAILED"
+      }
+    ],
+    "validated_operational_context": null,
+    "v1_v2_decision": "v1 retained; v2 remains candidate and was not promoted"
+  },
+  "report_commit_sha": null,
+  "report_paths": {
+    "artifact_manifest": "reports/runs/2026-07-16_llm_0_2_real_gemma_benchmark/ARTIFACT_MANIFEST.json",
+    "checksums": "reports/runs/2026-07-16_llm_0_2_real_gemma_benchmark/CHECKSUMS.sha256",
+    "defects": "reports/runs/2026-07-16_llm_0_2_real_gemma_benchmark/DEFECTS.md",
+    "handoff": "reports/runs/2026-07-16_llm_0_2_real_gemma_benchmark/HANDOFF.json",
+    "summary": "reports/runs/2026-07-16_llm_0_2_real_gemma_benchmark/SUMMARY.md",
+    "test_results": "reports/runs/2026-07-16_llm_0_2_real_gemma_benchmark/TEST_RESULTS.md"
+  },
+  "status": "FAILED",
+  "test_records": [
+    {
+      "command": "python -m pytest -q",
+      "name": "pytest",
+      "result": "PASS"
+    },
+    {
+      "command": "docker build -f docker/Dockerfile.worker -t journal-factory-worker:llm0-2 .",
+      "name": "docker_worker_build",
+      "result": "PASS"
+    },
+    {
+      "command": "docker compose -f docker-compose.llm.yml config",
+      "name": "compose_config_validation",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m journal_factory.llm.host_runner real-benchmark --mock --output .tmp_llm02_mock_benchmark.json",
+      "name": "mock_benchmark_rejected_as_real",
+      "result": "PASS",
+      "notes": "Mock output was schema-valid but correctly reported status FAILED with MOCK_NOT_REAL_BENCHMARK."
+    },
+    {
+      "command": "python -m journal_factory.llm.host_runner real-benchmark --base-url http://127.0.0.1:1234 --model google/gemma-4-e2b --runtime lmstudio-openai-compatible --context 16384 --max-output 2048 --temperature 0.01 --seed 42 --threads 12 --gpu-layers 34 --concurrency 1 --prompt-templates auto_jinja,manual_chatml --response-format json_schema --repeat-count 1 --output reports/runs/2026-07-16_llm_0_2_real_gemma_benchmark/REAL_GEMMA_BENCHMARK.json",
+      "name": "real_lmstudio_gemma4_e2b_benchmark",
+      "result": "FAIL",
+      "notes": "Real benchmark executed; gates failed on context-only ID leakage and state disagreement."
+    },
+    {
+      "command": "python -m journal_factory.llm.host_runner real-benchmark --base-url http://127.0.0.1:11434 --model gemma4:e2b --runtime ollama-openai-compatible --context 16384 --max-output 2048 --temperature 0.01 --seed 42 --threads 12 --gpu-layers 34 --concurrency 1 --prompt-templates auto_jinja,manual_chatml --response-format json_schema --repeat-count 1 --output reports/runs/2026-07-16_llm_0_2_real_gemma_benchmark/REAL_GEMMA_BENCHMARK_OLLAMA.json",
+      "name": "real_host_ollama_gemma4_e2b_benchmark",
+      "result": "FAIL",
+      "notes": "Real benchmark executed; gates failed on missing ID and state disagreement."
+    },
+    {
+      "command": "docker run --rm -v \"${PWD}:/repo\" zricethezav/gitleaks:latest detect --source /repo --no-git --redact -v",
+      "name": "docker_gitleaks_scan",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m journal_factory.llm.host_runner validate-public-handoff reports/runs/2026-07-16_llm_0_2_real_gemma_benchmark/HANDOFF.json",
+      "name": "handoff_schema_validation",
+      "result": "PASS"
+    },
+    {
+      "command": "targeted rg scans for secrets, local paths, personal email/phone patterns, and model weight extensions",
+      "name": "targeted_public_data_scan",
+      "result": "PASS"
+    }
+  ]
+}
