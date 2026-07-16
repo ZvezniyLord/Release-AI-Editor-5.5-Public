@@ -1,0 +1,89 @@
+{
+  "artifact_data_classes": [
+    "public_code",
+    "sanitized_reports",
+    "synthetic_fixtures",
+    "docker_config"
+  ],
+  "base_sha": "cdd1132059365a7abaaab69682b9f4fb0e339d22",
+  "blockers": [
+    "LMSTUDIO_MISSING_AMBIGUOUS_SOURCE_ID_P017",
+    "REAL_GEMMA_BENCHMARK_GATES_FAILED"
+  ],
+  "cycle": "LLM-0.3 Contract Constrained Repair",
+  "implementation_commit_sha": "6157e6ec930790483f6552c7659dc0632910a14a",
+  "model_config_summary": {
+    "ablation_results": "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/ABLATION_RESULTS.json",
+    "base_branch": "agent/llm-0-2-real-gemma-benchmark",
+    "candidate_prompt": "skills/journal_builder/prompts/paragraph_classifier/v1.1/system.txt",
+    "candidate_prompt_sha256": "d7d816fe7bb63516ca781fb611638e6d255e93be9ab5bf2b845c619756c7a4c8",
+    "candidate_status": "failed_lmstudio_passed_ollama",
+    "docker_worker_image": "journal-factory-worker:llm0-3",
+    "generated_request_schema_strategy": "source_id_enum_for_blocks_and_problems",
+    "real_model_benchmark": "executed_failed_lmstudio",
+    "stored_output_schema": "skills/journal_builder/schemas/paragraph_classifier_output.v1.schema.json",
+    "stored_output_schema_sha256": "c7fa809f98bdd1775e58f94f513eb29f761d6b651f029cc988251f949ada665e",
+    "validated_operational_context": null,
+    "v1_v2_decision": "v1 remains active; v1.1 is candidate only; v2 remains candidate"
+  },
+  "report_commit_sha": null,
+  "report_paths": {
+    "artifact_manifest": "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/ARTIFACT_MANIFEST.json",
+    "checksums": "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/CHECKSUMS.sha256",
+    "defects": "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/DEFECTS.md",
+    "handoff": "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/HANDOFF.json",
+    "summary": "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/SUMMARY.md",
+    "test_results": "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/TEST_RESULTS.md"
+  },
+  "status": "FAILED",
+  "test_records": [
+    {
+      "command": "python -m pytest -q",
+      "name": "pytest",
+      "result": "PASS"
+    },
+    {
+      "command": "docker build -f docker/Dockerfile.worker -t journal-factory-worker:llm0-3 .",
+      "name": "docker_worker_build",
+      "result": "PASS"
+    },
+    {
+      "command": "docker compose -f docker-compose.llm.yml config",
+      "name": "compose_config_validation",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m journal_factory.llm.host_runner real-benchmark --mock --prompt-version v1.1 --prompt-templates auto_jinja --output .tmp_llm03_mock.json",
+      "name": "mock_harness_smoke",
+      "result": "PASS",
+      "notes": "Mock correctly exits non-zero because mock is not a real benchmark."
+    },
+    {
+      "command": "real ablation: LM Studio google/gemma-4-e2b, prompt v1 and v1.1, 3 repeats each",
+      "name": "real_lmstudio_ablation",
+      "result": "FAIL",
+      "notes": "v1.1 failed because P017 was missing in all repeats."
+    },
+    {
+      "command": "real ablation: host Ollama gemma4:e2b, prompt v1 and v1.1, 3 repeats each",
+      "name": "real_ollama_ablation",
+      "result": "PASS",
+      "notes": "v1.1 passed all gates in all repeats."
+    },
+    {
+      "command": "docker run --rm -v \"${PWD}:/repo\" zricethezav/gitleaks:latest detect --source /repo --no-git --redact -v",
+      "name": "docker_gitleaks_scan",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m journal_factory.llm.host_runner validate-public-handoff reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/HANDOFF.json",
+      "name": "handoff_schema_validation",
+      "result": "PASS"
+    },
+    {
+      "command": "targeted rg scans for local paths, personal email/phone patterns, secret patterns, and model weight extensions",
+      "name": "targeted_public_data_scan",
+      "result": "PASS"
+    }
+  ]
+}

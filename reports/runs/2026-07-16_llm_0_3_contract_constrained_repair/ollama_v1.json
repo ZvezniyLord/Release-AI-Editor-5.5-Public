@@ -1,0 +1,173 @@
+{
+  "benchmark_parameters": {
+    "concurrency": 1,
+    "context": 16384,
+    "generated_request_schema_strategy": "source_id_enum_for_blocks_and_problems",
+    "gpu_layers": 34,
+    "max_output": 2048,
+    "model_supported_context": 131072,
+    "prompt_skill_version": "v1",
+    "prompt_templates": [
+      "auto_jinja"
+    ],
+    "repeat_count": 3,
+    "response_format": "json_schema",
+    "seed": 42,
+    "temperature": 0.01,
+    "threads": 12
+  },
+  "blockers": [
+    "REAL_GEMMA_BENCHMARK_GATES_FAILED"
+  ],
+  "closed_blockers": [
+    "REAL_GEMMA4_E2B_BENCHMARK_NOT_RUN"
+  ],
+  "cycle": "LLM-0.3",
+  "docker_image_digest": null,
+  "docker_image_name": null,
+  "endpoint": "http://127.0.0.1:11434",
+  "fixture_count": 1,
+  "fixture_path": "fixtures/synthetic/llm_benchmark/paragraph_classifier_v1.json",
+  "gates": {
+    "context_only_id_failures": 0,
+    "duplicate_id_failures": 0,
+    "forbidden_field_failures": 0,
+    "id_contract_failures": 0,
+    "missing_id_failures": 0,
+    "passed": false,
+    "schema_failures": 0,
+    "semantic_exact_rate_min": 0.8,
+    "state_failures": 0,
+    "valid_output_rate": 1.0
+  },
+  "metrics": {
+    "context_only_id_failures": 0,
+    "duplicate_id_failures": 0,
+    "forbidden_field_failures": 0,
+    "id_contract_failures": 3,
+    "json_failures": 0,
+    "latency_p50_ms": 17247.359200002393,
+    "latency_p95_ms": 17792.337400001998,
+    "latency_total_ms": 52175.47420000483,
+    "missing_id_failures": 3,
+    "schema_failures": 0,
+    "semantic_exact_rate": 0.9444444444444444,
+    "state_failures": 3,
+    "tokens_per_second": 192.498410139473,
+    "transport_failures": 0,
+    "valid_output_rate": 0.0
+  },
+  "model_file_sha256": "4e30e2665218745ef463f722c0bf86be0cab6ee676320f1cfadf91e989107448",
+  "model_identifier": "gemma4:e2b",
+  "open_follow_ups": [
+    "Keep v2 classifier schema as candidate until a separate migration decision is approved."
+  ],
+  "prompt_path": "skills/journal_builder/prompts/paragraph_classifier/v1/system.txt",
+  "prompt_skill_version": "v1",
+  "prompt_version": "paragraph-classifier-v1",
+  "runs": [
+    {
+      "chunk_id": "chunk-001",
+      "completion_tokens": 1331,
+      "context_only_id_count": 1,
+      "context_only_id_valid": true,
+      "errors": [
+        {
+          "code": "MISSING_ID",
+          "message": "ID mismatch missing=['P000'] extra=[]"
+        },
+        {
+          "code": "MODEL_STATE_DISAGREEMENT",
+          "message": "MODEL_STATE_DISAGREEMENT: {'author_status_found': {'model': False, 'deterministic': True}}"
+        }
+      ],
+      "expected_decision_id_count": 18,
+      "fixture_version": "paragraph-classifier-fixture-v1",
+      "id_contract_valid": false,
+      "json_valid": true,
+      "latency_ms": 17792.337400001998,
+      "model_reported": "gemma4:e2b",
+      "prompt_template": "auto_jinja",
+      "prompt_tokens": 2016,
+      "repeat": 1,
+      "response_format": "json_schema",
+      "schema_valid": true,
+      "semantic_exact_rate": 0.9444444444444444,
+      "state_valid": false,
+      "tokens_per_second": 188.11456542356677,
+      "total_tokens": 3347,
+      "valid_output": false
+    },
+    {
+      "chunk_id": "chunk-001",
+      "completion_tokens": 1331,
+      "context_only_id_count": 1,
+      "context_only_id_valid": true,
+      "errors": [
+        {
+          "code": "MISSING_ID",
+          "message": "ID mismatch missing=['P000'] extra=[]"
+        },
+        {
+          "code": "MODEL_STATE_DISAGREEMENT",
+          "message": "MODEL_STATE_DISAGREEMENT: {'author_status_found': {'model': False, 'deterministic': True}}"
+        }
+      ],
+      "expected_decision_id_count": 18,
+      "fixture_version": "paragraph-classifier-fixture-v1",
+      "id_contract_valid": false,
+      "json_valid": true,
+      "latency_ms": 17135.777600000438,
+      "model_reported": "gemma4:e2b",
+      "prompt_template": "auto_jinja",
+      "prompt_tokens": 2016,
+      "repeat": 2,
+      "response_format": "json_schema",
+      "schema_valid": true,
+      "semantic_exact_rate": 0.9444444444444444,
+      "state_valid": false,
+      "tokens_per_second": 195.32218709890702,
+      "total_tokens": 3347,
+      "valid_output": false
+    },
+    {
+      "chunk_id": "chunk-001",
+      "completion_tokens": 1331,
+      "context_only_id_count": 1,
+      "context_only_id_valid": true,
+      "errors": [
+        {
+          "code": "MISSING_ID",
+          "message": "ID mismatch missing=['P000'] extra=[]"
+        },
+        {
+          "code": "MODEL_STATE_DISAGREEMENT",
+          "message": "MODEL_STATE_DISAGREEMENT: {'author_status_found': {'model': False, 'deterministic': True}}"
+        }
+      ],
+      "expected_decision_id_count": 18,
+      "fixture_version": "paragraph-classifier-fixture-v1",
+      "id_contract_valid": false,
+      "json_valid": true,
+      "latency_ms": 17247.359200002393,
+      "model_reported": "gemma4:e2b",
+      "prompt_template": "auto_jinja",
+      "prompt_tokens": 2016,
+      "repeat": 3,
+      "response_format": "json_schema",
+      "schema_valid": true,
+      "semantic_exact_rate": 0.9444444444444444,
+      "state_valid": false,
+      "tokens_per_second": 194.05847789594526,
+      "total_tokens": 3347,
+      "valid_output": false
+    }
+  ],
+  "runtime": "ollama-openai-compatible",
+  "schema_path": "skills/journal_builder/schemas/paragraph_classifier_output.v1.schema.json",
+  "schema_version": "paragraph_classifier_output.v1",
+  "status": "FAILED",
+  "total_wall_time_ms": 52180.88180000632,
+  "v1_v2_decision": "v1 retained for LLM-0.2; v2 remains candidate and was not promoted.",
+  "validated_operational_context": null
+}

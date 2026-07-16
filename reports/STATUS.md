@@ -213,3 +213,35 @@ Verification:
 Stop condition:
 
 Stop for review. Do not start LLM-1, prompt repair, A020, style cleanup, journal regeneration, or TOC.
+
+## LLM-0.3 Contract Constrained Repair
+
+Task status: FAILED, not COMPLETED.
+
+Implementation SHA: `6157e6ec930790483f6552c7659dc0632910a14a`
+
+Public changes:
+
+- Added candidate prompt `skills/journal_builder/prompts/paragraph_classifier/v1.1/system.txt`.
+- Added candidate input schema `skills/journal_builder/schemas/paragraph_classifier_input.v1_1.schema.json`.
+- Kept active v1 prompt and output schema unchanged.
+- Added source/context split for v1.1 request payloads.
+- Added generated source-ID enum constraints for structured-output schema.
+- Added tests for source/context ID separation, context-ID rejection, empty paragraph preservation, state transitions, and benchmark gates.
+
+Real ablation:
+
+- LM Studio `google/gemma-4-e2b`, v1.1: FAILED. Missing source ID `P017` in 3/3 repeats.
+- Host Ollama `gemma4:e2b`, v1.1: COMPLETED. Passed all gates in 3/3 repeats.
+- Candidate passed one runtime but not both, so promotion is blocked.
+
+Verification:
+
+- Public pytest: PASS, 67 passed.
+- Docker worker build: PASS.
+- Compose config validation: PASS.
+- Docker-based gitleaks scan: PASS.
+
+Stop condition:
+
+Stop for review. Do not promote v1.1, do not start LLM-1, and do not touch journal generation, A020, formatting cleanup, frontmatter, or TOC.

@@ -1,0 +1,47 @@
+{
+  "cycle": "LLM-0.3 Contract Constrained Repair",
+  "status": "FAILED",
+  "base_branch": "agent/llm-0-2-real-gemma-benchmark",
+  "base_sha": "cdd1132059365a7abaaab69682b9f4fb0e339d22",
+  "implementation_commit_sha": "6157e6ec930790483f6552c7659dc0632910a14a",
+  "code_artifacts": [
+    "journal_factory/llm/benchmark.py",
+    "journal_factory/llm/host_runner.py",
+    "journal_factory/llm/templates.py",
+    "tests/test_llm_benchmark.py",
+    "tests/test_llm_contracts.py",
+    "fixtures/synthetic/llm_benchmark/paragraph_classifier_v1.json"
+  ],
+  "contract_artifacts": [
+    "skills/journal_builder/prompts/paragraph_classifier/v1/system.txt",
+    "skills/journal_builder/prompts/paragraph_classifier/v1.1/system.txt",
+    "skills/journal_builder/schemas/paragraph_classifier_input.v1_1.schema.json",
+    "skills/journal_builder/schemas/paragraph_classifier_output.v1.schema.json",
+    "skills/journal_builder/manifest.json",
+    "skills/journal_builder/SKILL.md"
+  ],
+  "report_artifacts": [
+    "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/SUMMARY.md",
+    "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/HANDOFF.json",
+    "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/TEST_RESULTS.md",
+    "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/ARTIFACT_MANIFEST.json",
+    "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/DEFECTS.md",
+    "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/DEFECT_ANALYSIS.md",
+    "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/ABLATION_RESULTS.json",
+    "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/CHECKSUMS.sha256",
+    "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/lmstudio_v1.json",
+    "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/lmstudio_v1_1.json",
+    "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/ollama_v1.json",
+    "reports/runs/2026-07-16_llm_0_3_contract_constrained_repair/ollama_v1_1.json"
+  ],
+  "excluded_artifacts": [
+    "model weights",
+    "LM Studio model files",
+    "Ollama model blobs",
+    "private datasets",
+    "journal DOCX/PDF",
+    "source articles",
+    "application workbooks",
+    "local absolute paths"
+  ]
+}
